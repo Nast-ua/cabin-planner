@@ -1,7 +1,4 @@
 import dayjs from "dayjs";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-
-dayjs.extend(isSameOrBefore);
 
 const Year = ({ onPressMonth }: { onPressMonth: (month: number) => void }) => {
   const months = dayjs().localeData().months();

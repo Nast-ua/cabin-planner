@@ -2,23 +2,14 @@ import ControlledDateInput from "@/components/controlled-date-input";
 import SecondaryButton from "@/components/secondary-button";
 import SubmitButton from "@/components/submit-button";
 import { handleBook } from "@/utils/actions";
-import dayjs from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import updateLocale from "dayjs/plugin/updateLocale";
-import Link from "next/link";
 
-dayjs.extend(isSameOrAfter);
-dayjs.extend(updateLocale);
-dayjs.updateLocale("en", {
-  weekStart: 1,
-}); // TODO: Move this to a global place
+import Link from "next/link";
 
 const BookPage = ({
   searchParams,
 }: {
   searchParams?: { startDate: string | null; endDate: string | null };
 }) => {
-  // TODO: Add some left margin on bigger screens
   return (
     <div>
       <h4 className="text-lg">Fill out the form & book your weekend!</h4>
@@ -80,15 +71,7 @@ const BookPage = ({
         </div>
 
         <div className="flex xxs:flex-col items-center xxs:justify-center xxs:self-center">
-          <Link
-            // TODO: Abstract to a smart component with state
-            href={{
-              pathname: "/availability",
-              // query: {
-              //   initialDate: startDate,
-              // },
-            }}
-          >
+          <Link href={{ pathname: "/availability" }}>
             <SecondaryButton
               value="check-availability"
               type="submit"

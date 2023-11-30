@@ -1,8 +1,6 @@
 import dayjs from "dayjs";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import Week from "./week";
 
-dayjs.extend(isSameOrBefore);
+import Week from "./week";
 
 const Month = ({ month, year }: { month: number; year: number }) => {
   const startOfMonth = dayjs().month(month).year(year).startOf("month");

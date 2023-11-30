@@ -1,38 +1,7 @@
 import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
-import localeData from "dayjs/plugin/localeData";
-import updateLocale from "dayjs/plugin/updateLocale";
-import utc from "dayjs/plugin/utc";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-import weekday from "dayjs/plugin/weekday";
+
 import Day, { DayType } from "./day";
-
-dayjs.extend(weekday);
-dayjs.extend(utc);
-dayjs.extend(weekOfYear);
-dayjs.extend(localeData);
-dayjs.extend(isBetween);
-
-dayjs.extend(updateLocale);
-dayjs.updateLocale("en", {
-  months: [
-    "Januar",
-    "Februar",
-    "März",
-    "April",
-    "Mai",
-    "Juni",
-    "Juli",
-    "August",
-    "September",
-    "Oktober",
-    "November",
-    "Dezember",
-  ],
-  weekdaysShort: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
-  weekStart: 1,
-});
 
 const Week = ({
   startOfWeek,
@@ -50,6 +19,7 @@ const Week = ({
 
   const daysOfWeek = dayjs().localeData().weekdaysShort();
 
+  // Map reserved days to the current week
   const weekdays = daysOfWeek.map((_, i) => {
     const day = dayjs(startOfWeek).add(i, "days");
 
@@ -62,7 +32,7 @@ const Week = ({
       );
     });
 
-    const reservedType: DayType | undefined = reservedDates
+    const reservedType: ReservedFlagType | undefined = reservedDates
       ? reservedDates.duration === 0
         ? "single"
         : day.isSame(dayjs(reservedDates.startDate))
@@ -75,21 +45,24 @@ const Week = ({
       : undefined;
 
     return {
-      day: day.date(),
-      month: day.get("month"),
       key: day.format("YYYYMMDD"),
-      highlightType:
-        day.get("month") !== currentMonth
-          ? ("notCurrentMonth" as DayType)
-          : reservedType,
+      day: day.date(),
+      disabled: day.isBefore(dayjs(), "day") || !!reservedType,
+      highlight:
+        day.get("month") !== currentMonth || day.isBefore(dayjs(), "day")
+          ? "pastDay"
+          : day.isSame(dayjs(), "day")
+          ? "today"
+          : undefined,
+      reservedFlagType: reservedType,
       eventName: (reservedType === "eventStart" && reservedDates?.name) || null,
     };
   });
 
-  // todo: Abstract logic
   const handlePickDates = (date: string) => {
     setIsError(null);
 
+    // Overlap can occur only if startDate is has been already selected
     const selectedDatesOverlap = selectedDates?.startDate
       ? reservedDays?.find(({ startDate }) => {
           return dayjs(startDate).isBetween(
@@ -101,37 +74,21 @@ const Week = ({
         })
       : null;
 
-    if (
-      selectedDates?.startDate &&
-      selectedDates?.startDate !== date &&
-      dayjs(date).isBefore(dayjs(selectedDates.startDate))
-    ) {
-      if (selectedDatesOverlap) {
-        setSelectedDates((prevDates) => ({
-          startDate: dayjs(selectedDatesOverlap.startDate)
-            .add(selectedDatesOverlap.duration + 1, "days")
-            .format("YYYYMMDD"),
-          endDate: prevDates?.startDate!,
-        }));
-        setIsError("dates-reserved");
-      } else
-        setSelectedDates((prevDates) => ({
-          startDate: date,
-          endDate: prevDates?.startDate!,
-        }));
-    } else if (selectedDatesOverlap) {
-      setSelectedDates((prevDates) => ({
-        ...(prevDates as { startDate: string; endDate: string }),
-        endDate: dayjs(selectedDatesOverlap.startDate)
-          .subtract(1, "days")
-          .format("YYYYMMDD"),
-      }));
-      setIsError("dates-reserved");
-    } else if (selectedDates?.startDate && selectedDates?.startDate !== date) {
-      setSelectedDates((prevDates) => ({
-        ...(prevDates as { startDate: string }),
-        endDate: prevDates?.endDate === date ? null : date,
-      }));
+    if (selectedDatesOverlap) setIsError("dates-reserved");
+
+    if (selectedDates?.startDate && date !== selectedDates?.startDate) {
+      setSelectedDates((prevDates) =>
+        dayjs(date).isBefore(dayjs(selectedDates.startDate))
+          ? {
+              ...(prevDates as { startDate: string }),
+              startDate: date,
+              endDate: prevDates?.startDate as string,
+            }
+          : {
+              ...(prevDates as { startDate: string }),
+              endDate: prevDates?.endDate === date ? null : date,
+            }
+      );
     } else if (
       selectedDates?.startDate &&
       selectedDates.endDate &&
@@ -150,45 +107,30 @@ const Week = ({
   };
 
   return (
-    <div className="flex relative">
-      {weekdays.map(({ key, day, highlightType, eventName }) => (
-        <div key={key} className="relative flex flex-auto">
+    <div className="flex">
+      {weekdays.map(({ key, day, disabled, highlight, eventName }) => (
+        <div key={key} className="flex flex-1">
           <p className="hidden sm:flex sm:shrink-0 sm:z-30 w-max sm:absolute sm:left-[12px] sm:top-[40%] sm:pt-1">
             {eventName}
           </p>
 
           <Day
             day={day}
-            highlightType={
-              highlightType ||
-              (!highlightType &&
-                ((selectedDates?.startDate &&
+            highlight={
+              selectedDates?.startDate === key ||
+              selectedDates?.endDate === key ||
+              (selectedDates?.startDate &&
                 selectedDates.endDate &&
                 dayjs(key).isBetween(
-                  dayjs(selectedDates.startDate),
-                  dayjs(selectedDates.endDate),
+                  dayjs(selectedDates?.startDate),
+                  dayjs(selectedDates?.endDate),
                   null,
-                  "()"
-                )
-                  ? "withinEvent"
-                  : selectedDates?.startDate &&
-                    !selectedDates.endDate &&
-                    dayjs(key).isSame(dayjs(selectedDates.startDate))
-                  ? "single"
-                  : selectedDates?.startDate &&
-                    selectedDates.endDate &&
-                    dayjs(key).isSame(dayjs(selectedDates.startDate))
-                  ? "eventStart"
-                  : selectedDates?.endDate &&
-                    dayjs(key).isSame(dayjs(selectedDates.endDate))
-                  ? "eventEnd"
-                  : undefined) as DayType))
+                  "[]"
+                ))
+                ? "selected"
+                : (highlight as DayType)
             }
-            disabled={
-              highlightType === "eventStart" ||
-              highlightType === "eventEnd" ||
-              highlightType === "withinEvent"
-            }
+            disabled={disabled}
             onPressDay={() => handlePickDates(key)}
           />
         </div>
@@ -198,3 +140,45 @@ const Week = ({
 };
 
 export default Week;
+
+export type ReservedFlagType =
+  | "eventStart"
+  | "eventEnd"
+  | "single"
+  | "withinEvent"
+  | "notCurrentMonth";
+
+const ReservedFlagSmallScreens = ({ type }: { type?: ReservedFlagType }) => {
+  const style =
+    type === "eventStart"
+      ? "left-[20%] rounded-tl-full rounded-bl-full"
+      : type === "eventEnd"
+      ? "right-[20%] rounded-tr-full rounded-br-full"
+      : type === "single"
+      ? "hidden"
+      : "";
+
+  return (
+    <div
+      className={`absolute shadow-md mt-[10px] py-1 bg-emerald-600/70 w-full h-8 sm:hidden ${style}`}
+    />
+  );
+};
+
+const ReservedFlagLargeScreens = ({ type }: { type?: ReservedFlagType }) => {
+  const style = type === "eventEnd" ? "rounded-tr-md rounded-br-md" : "";
+
+  return (
+    <div
+      className={`hidden shadow-md sm:absolute sm:top-[40%] sm:w-full sm:h-8 sm:flex ${
+        type === "eventEnd" ? "sm:right-2" : ""
+      }`}
+    >
+      {(type === "eventStart" || type === "single") && (
+        <div className="border border-emerald-700/90 bg-emerald-700/70 w-2" />
+      )}
+
+      <div className={`bg-emerald-600/70 opacity-100 w-full ${style}`} />
+    </div>
+  );
+};

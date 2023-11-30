@@ -20,29 +20,36 @@ const ControlledDateInput = ({
   initialDate,
   ...rest
 }: ControlledDateInputProps) => {
-  const endOfWeek = dayjs().endOf("week");
-  const defaultDate =
-    type === "start"
-      ? endOfWeek.subtract(2, "days").format("YYYY-MM-DD")
-      : endOfWeek.format("YYYY-MM-DD");
-
-  const [date, setDate] = useState<string>(initialDate || defaultDate);
-
   const { selectedDates, setSelectedDates, isError, setIsError } =
     useSelectDates();
+
+  const endOfWeek = dayjs().endOf("week");
+
+  const defaultDate =
+    type === "start"
+      ? (
+          (selectedDates?.startDate && dayjs(selectedDates?.startDate)) ||
+          endOfWeek.subtract(2, "days")
+        ).format("YYYY-MM-DD")
+      : (
+          (selectedDates?.endDate && dayjs(selectedDates?.endDate)) ||
+          endOfWeek
+        ).format("YYYY-MM-DD");
+
+  const [date, setDate] = useState<string>(initialDate || defaultDate);
 
   const synchronizeSelectedDates = useCallback(
     (date: string) =>
       setSelectedDates((prevDates) => {
         if (type === "start")
           return {
-            startDate: date,
+            startDate: dayjs(date).format("YYYYMMDD"),
             endDate: prevDates?.endDate || null,
           };
         else
           return {
             startDate: prevDates?.startDate || null,
-            endDate: date,
+            endDate: dayjs(date).format("YYYYMMDD"),
           };
       }),
     [setSelectedDates, type]
@@ -69,6 +76,7 @@ const ControlledDateInput = ({
       setIsError("end-date-less-than-start-date");
   };
 
+  // On mount set synchronize context
   useEffect(() => {
     synchronizeSelectedDates(initialDate || defaultDate);
   }, [defaultDate, initialDate, synchronizeSelectedDates]);

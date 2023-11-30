@@ -16,7 +16,7 @@ const LINKS = [
     href: "/my-events",
   },
   {
-    name: "Current Admins", // todo: if admin current requests
+    name: "Current Admins",
     href: "/admins",
   },
 ];
