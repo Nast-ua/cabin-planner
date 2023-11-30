@@ -6,10 +6,12 @@ import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useState } from "react";
+import ErrorMessage from "../error-message";
 import PrimaryButton from "../primary-button";
 
 const Calender = ({ initialDate }: { initialDate?: string }) => {
-  const { selectedDates, isError } = useSelectDates();
+  // TODO: setIsError(null) on change route + fix calender jumping between month &year
+  const { selectedDates, isError, setIsError } = useSelectDates();
 
   const [selectedView, setSelectedView] = useState<"month" | "year">("month");
 
@@ -63,10 +65,8 @@ const Calender = ({ initialDate }: { initialDate?: string }) => {
         <Year onPressMonth={handleChooseMonth} />
       )}
 
-      {isError ? (
-        <p className="text-red-500/80 text-[12px] pl-1">
-          Please, select dates, which do not overlap with existing event!
-        </p>
+      {isError === "dates-reserved" ? (
+        <ErrorMessage text="Please, select dates, which do not overlap with existing event!" />
       ) : (
         <div className="h-[18px]" />
       )}

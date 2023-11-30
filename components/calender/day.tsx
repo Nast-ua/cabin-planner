@@ -17,6 +17,7 @@ const Day = ({
   highlightType?: DayType;
   disabled?: boolean;
 }) => {
+  // TODO: Mark selected dates with a different color
   return (
     <div
       onClick={(e) => {

@@ -88,7 +88,7 @@ const Week = ({
 
   // todo: Abstract logic
   const handlePickDates = (date: string) => {
-    setIsError(false);
+    setIsError(null);
 
     const selectedDatesOverlap = selectedDates?.startDate
       ? reservedDays?.find(({ startDate }) => {
@@ -113,7 +113,7 @@ const Week = ({
             .format("YYYYMMDD"),
           endDate: prevDates?.startDate!,
         }));
-        setIsError(true);
+        setIsError("dates-reserved");
       } else
         setSelectedDates((prevDates) => ({
           startDate: date,
@@ -126,7 +126,7 @@ const Week = ({
           .subtract(1, "days")
           .format("YYYYMMDD"),
       }));
-      setIsError(true);
+      setIsError("dates-reserved");
     } else if (selectedDates?.startDate && selectedDates?.startDate !== date) {
       setSelectedDates((prevDates) => ({
         ...(prevDates as { startDate: string }),

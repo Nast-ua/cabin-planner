@@ -1,34 +1,29 @@
-"use client";
+import ControlledDateInput from "@/components/controlled-date-input";
 import SecondaryButton from "@/components/secondary-button";
 import SubmitButton from "@/components/submit-button";
 import { handleBook } from "@/utils/actions";
 import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import updateLocale from "dayjs/plugin/updateLocale";
 import Link from "next/link";
-import { useState } from "react";
 
+dayjs.extend(isSameOrAfter);
 dayjs.extend(updateLocale);
 dayjs.updateLocale("en", {
   weekStart: 1,
-}); // todo: Move this to a global place
+}); // TODO: Move this to a global place
 
 const BookPage = ({
   searchParams,
 }: {
   searchParams?: { startDate: string | null; endDate: string | null };
 }) => {
-  const endOfWeek = dayjs().endOf("week");
-
-  const [startDate, setStartDate] = useState(
-    searchParams?.startDate ||
-      endOfWeek.subtract(2, "days").format("YYYY-MM-DD")
-  );
-
+  // TODO: Add some left margin on bigger screens
   return (
     <div>
       <h4 className="text-lg">Fill out the form & book your weekend!</h4>
 
-      <form className="flex flex-col mt-4 max-w-[480px]">
+      <form className="flex flex-col mt-6 max-w-[480px]">
         <label htmlFor="name" className="text-[12px] pl-1">
           Name
         </label>
@@ -39,7 +34,7 @@ const BookPage = ({
           type="text"
           required
           placeholder="Your Name"
-          className="border-2 border-black/5 rounded-lg px-4 py-2 mt-1 mb-4"
+          className="border-2 border-black/5 rounded-lg px-4 py-2 mt-1 mb-6"
         />
 
         <label htmlFor="family-tree-select" className="text-[12px] pl-1">
@@ -50,7 +45,7 @@ const BookPage = ({
           name="family-tree-names"
           id="family-tree-select"
           required
-          className="border-2 border-black/5 rounded-lg px-4 py-2 mt-2 mb-4 appearance-none
+          className="border-2 border-black/5 rounded-lg px-4 py-2 mt-2 mb-6 appearance-none
           bg-chevron-down bg-no-repeat bg-right-4 bg-[length:16px_16px]"
         >
           <option value="richard">Family Richard</option>
@@ -60,23 +55,15 @@ const BookPage = ({
           <option value="ulrich">Family Ulrich</option>
         </select>
 
-        <div className="flex mb-4 flex-wrap">
+        <div className="flex mb-6 flex-wrap">
           <div className="flex flex-col">
             <label htmlFor="from-date" className="text-[12px] pl-1">
               From
             </label>
 
-            <input
-              name="from-date"
-              id="from-date"
-              type="date"
-              required
-              value={startDate}
-              onChange={(e) => {
-                e.preventDefault();
-                setStartDate(e.target.value);
-              }}
-              className="border-2 border-black/5 rounded-lg px-4 py-2 mt-2"
+            <ControlledDateInput
+              type="start"
+              initialDate={searchParams?.startDate}
             />
           </div>
 
@@ -85,30 +72,21 @@ const BookPage = ({
               To
             </label>
 
-            <input
-              name="to-date"
-              id="to-date"
-              type="date"
-              required
-              defaultValue={
-                searchParams?.endDate || endOfWeek.format("YYYY-MM-DD")
-              }
-              className="border-2 border-black/5 rounded-lg px-4 py-2 mt-2"
+            <ControlledDateInput
+              type="end"
+              initialDate={searchParams?.endDate}
             />
           </div>
-          {/* <ControlledDateInput
-              type="start"
-              initialDate={searchParams?.startDate}
-            /> */}
         </div>
 
         <div className="flex xxs:flex-col items-center xxs:justify-center xxs:self-center">
           <Link
+            // TODO: Abstract to a smart component with state
             href={{
               pathname: "/availability",
-              query: {
-                initialDate: startDate,
-              },
+              // query: {
+              //   initialDate: startDate,
+              // },
             }}
           >
             <SecondaryButton

@@ -1,5 +1,6 @@
 "use client";
 
+import useSelectDates from "@/utils/useSelectDates";
 import { useFormStatus } from "react-dom";
 import PrimaryButton, { PrimaryButtonProps } from "./primary-button";
 
@@ -11,11 +12,12 @@ export const SubmitButton = ({
   ...rest
 }: SubmitButtonProps) => {
   const { pending } = useFormStatus();
+  const { isError } = useSelectDates();
 
   return (
     <PrimaryButton
       isLoading={pending}
-      disabled={pending || disabled}
+      disabled={!!isError || pending || disabled}
       label={label}
       {...rest}
     />

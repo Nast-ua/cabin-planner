@@ -1,3 +1,4 @@
+"use client";
 import {
   Dispatch,
   ReactNode,
@@ -20,7 +21,10 @@ type SelectedDatesContext = [
   >
 ];
 
-type SelectedDatesContextError = [boolean, Dispatch<SetStateAction<boolean>>];
+type SelectedDatesContextError = [
+  string | null,
+  Dispatch<SetStateAction<string | null>>
+];
 
 const throwError = () => {
   throw new Error("Provider is missing!");
@@ -32,7 +36,7 @@ const SelectedDatesContext = createContext<SelectedDatesContext>([
 ]);
 
 const SelectedDatesContextError = createContext<SelectedDatesContextError>([
-  false,
+  null,
   throwError,
 ]);
 
@@ -42,7 +46,7 @@ export const SelectedDateProvider = ({ children }: { children: ReactNode }) => {
     endDate: string | null;
   }>(null);
 
-  const errorState = useState<boolean>(false);
+  const errorState = useState<string | null>(null);
 
   return (
     <SelectedDatesContext.Provider value={selectedDatesState}>

@@ -1,7 +1,8 @@
 "use client";
 import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
-import { DetailedHTMLProps, useState } from "react";
+import { DetailedHTMLProps, useCallback, useEffect, useState } from "react";
+import ErrorMessage from "./error-message";
 
 export type ControlledDateInputProps = {
   type: "start" | "end";
@@ -26,35 +27,77 @@ const ControlledDateInput = ({
       : endOfWeek.format("YYYY-MM-DD");
 
   const [date, setDate] = useState<string>(initialDate || defaultDate);
-  const { setSelectedDates } = useSelectDates();
+
+  const { selectedDates, setSelectedDates, isError, setIsError } =
+    useSelectDates();
+
+  const synchronizeSelectedDates = useCallback(
+    (date: string) =>
+      setSelectedDates((prevDates) => {
+        if (type === "start")
+          return {
+            startDate: date,
+            endDate: prevDates?.endDate || null,
+          };
+        else
+          return {
+            startDate: prevDates?.startDate || null,
+            endDate: date,
+          };
+      }),
+    [setSelectedDates, type]
+  );
 
   const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
+    setIsError(null);
     setDate(e.target.value);
-    setSelectedDates((prevDates) => {
-      if (type === "start")
-        return {
-          startDate: e.target.value,
-          endDate: prevDates?.endDate || null,
-        };
-      else
-        return {
-          startDate: prevDates?.endDate || null,
-          endDate: e.target.value,
-        };
-    });
+    synchronizeSelectedDates(e.target.value);
+
+    if (
+      type === "start" &&
+      selectedDates?.endDate &&
+      dayjs(e.target.value).isAfter(dayjs(selectedDates?.endDate))
+    )
+      setIsError("start-date-less-than-end-date");
+    else if (
+      type === "end" &&
+      selectedDates?.startDate &&
+      dayjs(e.target.value).isBefore(dayjs(selectedDates?.startDate))
+    )
+      setIsError("end-date-less-than-start-date");
   };
 
+  useEffect(() => {
+    synchronizeSelectedDates(initialDate || defaultDate);
+  }, [defaultDate, initialDate, synchronizeSelectedDates]);
+
+  const showError =
+    (type === "start" && isError === "start-date-less-than-end-date") ||
+    (type === "end" && isError === "end-date-less-than-start-date");
+
   return (
-    <input
-      {...rest}
-      type="date"
-      required
-      value={date}
-      onChange={handleChangeDate}
-      className="border-2 border-black/5 rounded-lg px-4 py-2 mt-2"
-    />
+    <div>
+      <input
+        {...rest}
+        type="date"
+        min={dayjs().startOf("day").format("YYYY-MM-DD")}
+        required
+        value={date}
+        onChange={handleChangeDate}
+        className={`border-2 ${
+          showError ? "border-red-300" : "border-black/5"
+        } rounded-lg px-4 py-2 mt-2`}
+      />
+
+      {showError && (
+        <ErrorMessage
+          text="The start date should be earlier than the end date."
+          className="max-w-[168px] pl-2 -mb-[36px]"
+        />
+      )}
+    </div>
   );
 };
 
