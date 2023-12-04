@@ -1,61 +1,59 @@
 import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
 
+import useActiveReservation from "@/utils/useActiveReservation";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import Day, { DayType } from "./day";
+import ReservedFlag from "./reserved-flag";
+
+dayjs.extend(isSameOrAfter);
 
 const Week = ({
   startOfWeek,
-  reservedDays = [
-    { startDate: "20231103", duration: 5, name: "Lorem Ipsum Dolor" },
-    { startDate: "20231121", duration: 2, name: "Cleaning" },
-  ], // todo:
+  reservations = [
+    { startDay: "20231126", duration: 4 },
+    { startDay: "20231203", duration: 7 },
+  ], // todo: get real data
   currentMonth,
 }: {
   startOfWeek: string;
   currentMonth: number;
-  reservedDays?: { startDate: string; duration: number; name: string }[];
+  reservations?: { startDay: string; duration: number }[];
 }) => {
+  const [activeReservation, setActiveReservation] = useActiveReservation();
+
   const { selectedDates, setSelectedDates, setIsError } = useSelectDates();
 
   const daysOfWeek = dayjs().localeData().weekdaysShort();
+
+  const weekStart = dayjs(startOfWeek);
 
   // Map reserved days to the current week
   const weekdays = daysOfWeek.map((_, i) => {
     const day = dayjs(startOfWeek).add(i, "days");
 
-    const reservedDates = reservedDays.find(({ startDate, duration }) => {
-      return day.isBetween(
-        startDate,
-        dayjs(startDate).add(duration, "days"),
-        null,
-        "[]"
-      );
-    });
-
-    const reservedType: ReservedFlagType | undefined = reservedDates
-      ? reservedDates.duration === 0
-        ? "single"
-        : day.isSame(dayjs(reservedDates.startDate))
-        ? "eventStart"
-        : day.isSame(
-            dayjs(reservedDates.startDate).add(reservedDates?.duration, "days")
+    const isReserved =
+      (!!reservations?.length &&
+        reservations?.find(({ startDay, duration }) =>
+          day.isBetween(
+            dayjs(startDay),
+            dayjs(startDay).add(duration, "day"),
+            "days",
+            "[]"
           )
-        ? "eventEnd"
-        : "withinEvent"
-      : undefined;
+        )) ||
+      false;
 
     return {
       key: day.format("YYYYMMDD"),
       day: day.date(),
-      disabled: day.isBefore(dayjs(), "day") || !!reservedType,
+      disabled: day.isBefore(dayjs(), "day") || !!isReserved,
       highlight:
         day.get("month") !== currentMonth || day.isBefore(dayjs(), "day")
           ? "pastDay"
           : day.isSame(dayjs(), "day")
           ? "today"
           : undefined,
-      reservedFlagType: reservedType,
-      eventName: (reservedType === "eventStart" && reservedDates?.name) || null,
     };
   });
 
@@ -64,15 +62,18 @@ const Week = ({
 
     // Overlap can occur only if startDate is has been already selected
     const selectedDatesOverlap = selectedDates?.startDate
-      ? reservedDays?.find(({ startDate }) => {
-          return dayjs(startDate).isBetween(
-            dayjs(selectedDates.startDate),
-            dayjs(date),
-            null,
-            "[]"
-          );
-        })
-      : null;
+      ? Boolean(
+          !!reservations?.length &&
+            reservations.find(({ startDay, duration }) =>
+              dayjs(startDay).isBetween(
+                dayjs(selectedDates.startDate),
+                dayjs(date),
+                null,
+                "[]"
+              )
+            )
+        )
+      : false;
 
     if (selectedDatesOverlap) setIsError("dates-reserved");
 
@@ -107,13 +108,9 @@ const Week = ({
   };
 
   return (
-    <div className="flex">
-      {weekdays.map(({ key, day, disabled, highlight, eventName }) => (
+    <div className="relative flex items-center overflow-hidden sm:items-end ">
+      {weekdays.map(({ key, day, disabled, highlight }) => (
         <div key={key} className="flex flex-1">
-          <p className="hidden sm:flex sm:shrink-0 sm:z-30 w-max sm:absolute sm:left-[12px] sm:top-[40%] sm:pt-1">
-            {eventName}
-          </p>
-
           <Day
             day={day}
             highlight={
@@ -135,50 +132,20 @@ const Week = ({
           />
         </div>
       ))}
+
+      {!!reservations?.length &&
+        reservations.map(({ startDay, duration }) => (
+          <ReservedFlag
+            key={startOfWeek + startDay}
+            startOfWeek={startOfWeek}
+            start={startDay}
+            duration={duration}
+            isActive={activeReservation === startDay}
+            onClick={() => setActiveReservation(startDay)}
+          />
+        ))}
     </div>
   );
 };
 
 export default Week;
-
-export type ReservedFlagType =
-  | "eventStart"
-  | "eventEnd"
-  | "single"
-  | "withinEvent"
-  | "notCurrentMonth";
-
-const ReservedFlagSmallScreens = ({ type }: { type?: ReservedFlagType }) => {
-  const style =
-    type === "eventStart"
-      ? "left-[20%] rounded-tl-full rounded-bl-full"
-      : type === "eventEnd"
-      ? "right-[20%] rounded-tr-full rounded-br-full"
-      : type === "single"
-      ? "hidden"
-      : "";
-
-  return (
-    <div
-      className={`absolute shadow-md mt-[10px] py-1 bg-emerald-600/70 w-full h-8 sm:hidden ${style}`}
-    />
-  );
-};
-
-const ReservedFlagLargeScreens = ({ type }: { type?: ReservedFlagType }) => {
-  const style = type === "eventEnd" ? "rounded-tr-md rounded-br-md" : "";
-
-  return (
-    <div
-      className={`hidden shadow-md sm:absolute sm:top-[40%] sm:w-full sm:h-8 sm:flex ${
-        type === "eventEnd" ? "sm:right-2" : ""
-      }`}
-    >
-      {(type === "eventStart" || type === "single") && (
-        <div className="border border-emerald-700/90 bg-emerald-700/70 w-2" />
-      )}
-
-      <div className={`bg-emerald-600/70 opacity-100 w-full ${style}`} />
-    </div>
-  );
-};

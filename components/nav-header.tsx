@@ -38,7 +38,7 @@ const NavHeader = () => {
   return (
     <header
       ref={navList}
-      className="border-b md:border-b-0 border-black/10 md:bg-slate-100/25 md:-mb-[14px] relative"
+      className="border-b md:border-b-0 border-black/10 md:bg-slate-100/25 relative"
     >
       <nav className="px-4 h-[64px] z-50 flex flex-row justify-between md:justify-end items-center">
         <MenuButton

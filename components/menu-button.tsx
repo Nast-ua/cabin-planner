@@ -9,7 +9,7 @@ const MenuButton = ({
     <div className="md:hidden">
       <button
         type="button"
-        className="relative inline-flex items-center justify-center rounded-md p-2 text-black/80-400 hover:bg-zinc-200/90 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+        className="relative inline-flex items-center justify-center rounded-md p-2 text-black/80-400 hover:bg-zinc-200/90 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-100/90 active:bg-zinc-300/90"
         aria-controls="mobile-menu"
         aria-expanded="false"
         onClick={(e) => {

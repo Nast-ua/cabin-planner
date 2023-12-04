@@ -17,7 +17,7 @@ const Day = ({
         e.preventDefault();
         !disabled && onPressDay();
       }}
-      className={`block w-full items-center xs:min-w-[40px] xs:min-h-[40px] s:min-h-[54px] sm:min-w-[72px] sm:min-h-[72px] sm:border sm:border-black/5 md:min-w-20 md:min-h-20 lg:min-w-30 lg:min-h-30  ${
+      className={`flex w-full items-center justify-center sm:justify-start sm:items-start xs:min-w-[40px] xs:min-h-[40px] s:min-h-[54px] sm:min-w-[72px] sm:min-h-[72px] sm:border sm:border-black/5 md:min-w-20 md:min-h-20 lg:min-w-30 lg:min-h-30  ${
         highlight === "selected"
           ? "sm:bg-zinc-200/90"
           : highlight === "pastDay"
@@ -30,19 +30,19 @@ const Day = ({
       }`}
     >
       <div
-        className={`flex items-center justify-center mx-auto mt-[10%] max-w-[36px] h-[36px] rounded-full ${
+        className={`flex items-center justify-center min-w-[36px] min-h-[36px] xs:min-w-[28px] xs:min-h-[28px]  rounded-full ${
           disabled
             ? "bg-white cursor-default"
             : "bg-zinc-100/90 hover:bg-zinc-200/90 cursor-pointer"
         } ${
           highlight === "selected"
-            ? "border-2 border-zinc-300/90 bg-zinc-300/80 hover:opacity-70"
+            ? "border-2 border-zinc-300/90 bg-zinc-300/80 hover:opacity-70 sm:border-none"
             : highlight === "pastDay"
             ? "opacity-30"
             : highlight === "today"
             ? "bg-sky-700/50"
             : "bg-zinc-100/90"
-        } sm:mx-0 sm:mt-0 sm:bg-transparent `}
+        }  sm:bg-transparent`}
       >
         <p className="select-none text-center sm:text-right sm:pr-1">{day}</p>
       </div>
