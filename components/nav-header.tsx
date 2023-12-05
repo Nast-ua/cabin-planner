@@ -1,7 +1,8 @@
 "use client";
+import useClickOutside from "@/utils/useClickOutside";
 import { UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import MenuButton from "./menu-button";
 import NavList from "./nav-list";
 
@@ -19,21 +20,9 @@ const NavHeader = () => {
     }
   }, [pathname]);
 
-  const navList = useRef<HTMLDivElement | null>(null);
+  const handleClickOutside = useCallback(() => setIsMenuOpen(false), []);
 
-  useEffect(() => {
-    function handleClickOutside(e: globalThis.MouseEvent) {
-      if (navList.current && !navList.current.contains(e.target as Node)) {
-        // console.log("clicked outside", navList.current.id);
-        setIsMenuOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [navList]);
+  const navList = useClickOutside(handleClickOutside);
 
   return (
     <header

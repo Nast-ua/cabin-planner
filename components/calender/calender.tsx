@@ -16,6 +16,7 @@ import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import weekday from "dayjs/plugin/weekday";
 
+import useActiveReservation from "@/utils/useActiveReservation";
 import Link from "next/link";
 import { useState } from "react";
 import ErrorMessage from "../error-message";
@@ -50,6 +51,7 @@ dayjs.extend(isSameOrBefore);
 
 const Calender = ({ initialDate }: { initialDate?: string }) => {
   const { selectedDates, isError } = useSelectDates();
+  const [activeReservation] = useActiveReservation();
 
   const [selectedView, setSelectedView] = useState<"month" | "year">("month");
 
@@ -127,8 +129,10 @@ const Calender = ({ initialDate }: { initialDate?: string }) => {
       >
         <PrimaryButton
           type="submit"
-          disabled={!selectedDates?.startDate || !!isError}
-          label="Book"
+          disabled={
+            (!activeReservation && !selectedDates?.startDate) || !!isError
+          }
+          label={activeReservation ? "Request To Join" : "Book"}
         />
       </Link>
     </div>

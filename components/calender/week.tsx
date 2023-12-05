@@ -2,7 +2,9 @@ import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
 
 import useActiveReservation from "@/utils/useActiveReservation";
+import useClickOutside from "@/utils/useClickOutside";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import { useCallback } from "react";
 import Day, { DayType } from "./day";
 import ReservedFlag from "./reserved-flag";
 
@@ -23,6 +25,13 @@ const Week = ({
   const [activeReservation, setActiveReservation] = useActiveReservation();
 
   const { selectedDates, setSelectedDates, setIsError } = useSelectDates();
+
+  const handleClickOutside = useCallback(
+    () => setActiveReservation(null),
+    [setActiveReservation]
+  );
+
+  const ref = useClickOutside(handleClickOutside);
 
   const daysOfWeek = dayjs().localeData().weekdaysShort();
 
@@ -59,8 +68,9 @@ const Week = ({
 
   const handlePickDates = (date: string) => {
     setIsError(null);
+    setActiveReservation(null);
 
-    // Overlap can occur only if startDate is has been already selected
+    // Overlap can occur only if startDate has been already selected
     const selectedDatesOverlap = selectedDates?.startDate
       ? Boolean(
           !!reservations?.length &&
@@ -108,7 +118,10 @@ const Week = ({
   };
 
   return (
-    <div className="relative flex items-center overflow-hidden sm:items-end ">
+    <div
+      ref={ref}
+      className="relative flex items-center overflow-hidden sm:items-end "
+    >
       {weekdays.map(({ key, day, disabled, highlight }) => (
         <div key={key} className="flex flex-1">
           <Day
