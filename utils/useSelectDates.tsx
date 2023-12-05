@@ -47,7 +47,6 @@ export const SelectedDateProvider = ({ children }: { children: ReactNode }) => {
   }>(null);
 
   const errorState = useState<string | null>(null);
-
   return (
     <SelectedDatesContext.Provider value={selectedDatesState}>
       <SelectedDatesContextError.Provider value={errorState}>

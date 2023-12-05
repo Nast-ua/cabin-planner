@@ -74,6 +74,8 @@ const ControlledDateInput = ({
       dayjs(e.target.value).isBefore(dayjs(selectedDates?.startDate))
     )
       setIsError("end-date-less-than-start-date");
+
+    // TODO: set error if overlaps with existing event
   };
 
   // On mount set synchronize context

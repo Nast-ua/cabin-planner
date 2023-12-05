@@ -1,4 +1,7 @@
+import useActiveReservation from "@/utils/useActiveReservation";
+import useClickOutside from "@/utils/useClickOutside";
 import dayjs from "dayjs";
+import { useCallback } from "react";
 
 const ReservedFlag = ({
   startOfWeek,
@@ -13,6 +16,15 @@ const ReservedFlag = ({
   isActive?: boolean;
   onClick?: () => void;
 }) => {
+  const [, setActiveReservation] = useActiveReservation();
+
+  const handleClickOutside = useCallback(
+    () => !start && setActiveReservation(null),
+    [setActiveReservation, start]
+  );
+
+  const ref = useClickOutside(handleClickOutside);
+
   const weekStart = dayjs(startOfWeek);
   const weekEnd = weekStart.endOf("week");
 
@@ -61,6 +73,7 @@ const ReservedFlag = ({
 
     return (
       <div
+        ref={ref}
         onClick={(e) => {
           e.preventDefault();
           onClick && onClick();
