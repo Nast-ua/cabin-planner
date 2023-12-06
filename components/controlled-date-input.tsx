@@ -1,12 +1,11 @@
 "use client";
 import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
-import { DetailedHTMLProps, useCallback, useEffect, useState } from "react";
+import { DetailedHTMLProps, useCallback } from "react";
 import ErrorMessage from "./error-message";
 
 export type ControlledDateInputProps = {
   type: "start" | "end";
-  initialDate?: string | null;
 } & Omit<
   DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
@@ -15,11 +14,7 @@ export type ControlledDateInputProps = {
   "type | required | value | onChange | className"
 >;
 
-const ControlledDateInput = ({
-  type,
-  initialDate,
-  ...rest
-}: ControlledDateInputProps) => {
+const ControlledDateInput = ({ type, ...rest }: ControlledDateInputProps) => {
   const { selectedDates, setSelectedDates, isError, setIsError } =
     useSelectDates();
 
@@ -35,8 +30,6 @@ const ControlledDateInput = ({
           (selectedDates?.endDate && dayjs(selectedDates?.endDate)) ||
           endOfWeek
         ).format("YYYY-MM-DD");
-
-  const [date, setDate] = useState<string>(initialDate || defaultDate);
 
   const synchronizeSelectedDates = useCallback(
     (date: string) =>
@@ -55,11 +48,44 @@ const ControlledDateInput = ({
     [setSelectedDates, type]
   );
 
+  // TODO: fetch reserved dates
+  const reservations = [
+    { startDay: "20231203", endDay: "20231210", duration: 7 },
+    { startDay: "20231219", endDay: "20231220", duration: 0 },
+  ];
+
+  const selectedDatesOverlap =
+    selectedDates?.startDate && selectedDates.endDate
+      ? !!reservations?.length &&
+        Boolean(
+          reservations.find(
+            ({ startDay, endDay }) =>
+              dayjs(startDay).isBetween(
+                dayjs(selectedDates.startDate),
+                dayjs(selectedDates.endDate),
+                null,
+                "[]"
+              ) ||
+              dayjs(endDay).isBetween(
+                dayjs(selectedDates.startDate),
+                dayjs(selectedDates.endDate),
+                null,
+                "[]"
+              ) ||
+              dayjs(selectedDates.startDate).isBetween(
+                dayjs(startDay),
+                dayjs(endDay),
+                null,
+                "[]"
+              )
+          )
+        )
+      : false;
+
   const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
     setIsError(null);
-    setDate(e.target.value);
     synchronizeSelectedDates(e.target.value);
 
     if (
@@ -75,13 +101,8 @@ const ControlledDateInput = ({
     )
       setIsError("end-date-less-than-start-date");
 
-    // TODO: set error if overlaps with existing event
+    if (selectedDatesOverlap) setIsError("dates-reserved");
   };
-
-  // On mount set synchronize context
-  useEffect(() => {
-    synchronizeSelectedDates(initialDate || defaultDate);
-  }, [defaultDate, initialDate, synchronizeSelectedDates]);
 
   const showError =
     (type === "start" && isError === "start-date-less-than-end-date") ||
@@ -94,7 +115,15 @@ const ControlledDateInput = ({
         type="date"
         min={dayjs().startOf("day").format("YYYY-MM-DD")}
         required
-        value={date}
+        value={
+          type === "start"
+            ? (selectedDates?.startDate &&
+                dayjs(selectedDates.startDate).format("YYYY-MM-DD")) ||
+              defaultDate
+            : (selectedDates?.endDate &&
+                dayjs(selectedDates.endDate).format("YYYY-MM-DD")) ||
+              defaultDate
+        }
         onChange={handleChangeDate}
         className={`border-2 ${
           showError ? "border-red-300" : "border-black/5"

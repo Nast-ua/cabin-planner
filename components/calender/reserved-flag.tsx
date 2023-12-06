@@ -19,8 +19,8 @@ const ReservedFlag = ({
   const [, setActiveReservation] = useActiveReservation();
 
   const handleClickOutside = useCallback(
-    () => !start && setActiveReservation(null),
-    [setActiveReservation, start]
+    () => setActiveReservation(null),
+    [setActiveReservation]
   );
 
   const ref = useClickOutside(handleClickOutside);
@@ -43,8 +43,9 @@ const ReservedFlag = ({
       weekEnd.isBetween(reservationStart, reservationEnd, "days", "[]"))
   ) {
     const daysDiff = reservationStart.diff(weekStart, "day");
+
     const daysDuration =
-      reservationEnd.diff(weekEnd, "days") <= 0
+      weekEnd.diff(reservationEnd, "days") <= 0
         ? reservationEnd.diff(weekStart, "days")
         : duration;
 
@@ -94,7 +95,7 @@ const ReservedFlag = ({
         } rounded-lg focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-900/90
         sm:shadow-lg sm:rounded-md pl-4 sm:bottom-[7%] cursor-pointer hover:opacity-70`}
       >
-        <p className="hidden sm:block mt-[6px] ">Event Dolor... </p>
+        <p className="hidden truncate sm:block mt-[6px] ">Event Dolor... </p>
       </div>
     );
   }

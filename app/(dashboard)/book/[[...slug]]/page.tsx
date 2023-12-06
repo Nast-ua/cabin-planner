@@ -52,10 +52,7 @@ const BookPage = ({
               From
             </label>
 
-            <ControlledDateInput
-              type="start"
-              initialDate={searchParams?.startDate}
-            />
+            <ControlledDateInput type="start" />
           </div>
 
           <div className="flex flex-col ml-2 mb-4 xxs:ml-0 xxs:mt-4">
@@ -63,10 +60,7 @@ const BookPage = ({
               To
             </label>
 
-            <ControlledDateInput
-              type="end"
-              initialDate={searchParams?.endDate}
-            />
+            <ControlledDateInput type="end" />
           </div>
         </div>
 

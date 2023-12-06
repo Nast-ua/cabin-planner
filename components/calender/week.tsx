@@ -11,8 +11,8 @@ dayjs.extend(isSameOrAfter);
 const Week = ({
   startOfWeek,
   reservations = [
-    { startDay: "20231126", duration: 4 },
     { startDay: "20231203", duration: 7 },
+    { startDay: "20231219", duration: 1 },
   ], // todo: get real data
   currentMonth,
 }: {

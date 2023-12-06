@@ -17,6 +17,7 @@ export default function useClickOutside(onClick: () => void) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
         onClick();
       }
+      // console.log(e);
     }
 
     document.addEventListener("mousedown", handleClickOutside);
