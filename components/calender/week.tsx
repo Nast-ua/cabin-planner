@@ -1,6 +1,7 @@
 import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
 
+import checkIfDatesOverlap from "@/utils/checkIfDatesOverlap";
 import useActiveReservation from "@/utils/useActiveReservation";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import Day, { DayType } from "./day";
@@ -11,15 +12,15 @@ dayjs.extend(isSameOrAfter);
 const Week = ({
   startOfWeek,
   reservations = [
-    { startDay: "20231203", duration: 7 },
-    { startDay: "20231213", duration: 6 },
-    { startDay: "20231219", duration: 1 },
+    { startDay: "20231203", endDay: "20231210", duration: 7 },
+    { startDay: "20231213", endDay: "20231219", duration: 6 },
+    { startDay: "20231219", endDay: "20231220", duration: 1 },
   ], // todo: get real data
   currentMonth,
 }: {
   startOfWeek: string;
   currentMonth: number;
-  reservations?: { startDay: string; duration: number }[];
+  reservations?: { startDay: string; endDay: string; duration: number }[];
 }) => {
   const [activeReservation, setActiveReservation] = useActiveReservation();
 
@@ -50,16 +51,16 @@ const Week = ({
 
     // Overlap can occur only if startDate has been already selected
     const selectedDatesOverlap = selectedDates?.startDate
-      ? Boolean(
-          !!reservations?.length &&
-            reservations.find(({ startDay }) =>
-              dayjs(startDay).isBetween(
-                dayjs(selectedDates.startDate),
-                dayjs(date),
-                null,
-                "[]"
-              )
-            )
+      ? !!reservations?.length &&
+        Boolean(
+          reservations.find(({ startDay, endDay }) =>
+            checkIfDatesOverlap({
+              start1: startDay,
+              end1: endDay,
+              start2: selectedDates.startDate!,
+              end2: date,
+            })
+          )
         )
       : false;
 

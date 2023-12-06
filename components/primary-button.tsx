@@ -16,12 +16,12 @@ export const PrimaryButton = ({
 }: PrimaryButtonProps) => {
   return (
     <button
-      {...rest}
       className={`cursor-pointer relative ${
         disabled
           ? "bg-slate-500/60 cursor-default"
           : "bg-gradient-to-r from-cyan-500 to-blue-500 cursor-pointer"
       } text-white text-center px-12 py-2 rounded-full  hover:opacity-60 xxs:mt-2 xxs:flex xxs:justify-center xxs:min-w-full`}
+      {...rest}
     >
       {isLoading && (
         <svg

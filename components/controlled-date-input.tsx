@@ -1,4 +1,5 @@
 "use client";
+import checkIfDatesOverlap from "@/utils/checkIfDatesOverlap";
 import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
 import { DetailedHTMLProps, useCallback } from "react";
@@ -58,26 +59,13 @@ const ControlledDateInput = ({ type, ...rest }: ControlledDateInputProps) => {
     selectedDates?.startDate && selectedDates.endDate
       ? !!reservations?.length &&
         Boolean(
-          reservations.find(
-            ({ startDay, endDay }) =>
-              dayjs(startDay).isBetween(
-                dayjs(selectedDates.startDate),
-                dayjs(selectedDates.endDate),
-                null,
-                "[]"
-              ) ||
-              dayjs(endDay).isBetween(
-                dayjs(selectedDates.startDate),
-                dayjs(selectedDates.endDate),
-                null,
-                "[]"
-              ) ||
-              dayjs(selectedDates.startDate).isBetween(
-                dayjs(startDay),
-                dayjs(endDay),
-                null,
-                "[]"
-              )
+          reservations.find(({ startDay, endDay }) =>
+            checkIfDatesOverlap({
+              start1: startDay,
+              end1: endDay,
+              start2: selectedDates.startDate!,
+              end2: selectedDates.endDate!,
+            })
           )
         )
       : false;

@@ -111,30 +111,43 @@ const Calender = ({ initialDate }: { initialDate?: string }) => {
         <div className="h-[18px]" />
       )}
 
-      <Link
-        href={{
-          pathname: "/book",
-          query: selectedDates
-            ? {
-                startDate:
-                  selectedDates.startDate &&
-                  dayjs(selectedDates.startDate).format("YYYY-MM-DD"),
-                endDate:
-                  selectedDates.endDate &&
-                  dayjs(selectedDates.endDate).format("YYYY-MM-DD"),
-              }
-            : undefined,
-        }}
-        className="flex self-center mt-4"
-      >
-        <PrimaryButton
-          type="submit"
-          disabled={
-            (!activeReservation && !selectedDates?.startDate) || !!isError
-          }
-          label={activeReservation ? "Request To Join" : "Book"}
-        />
-      </Link>
+      {/* TODO: */}
+      {activeReservation && (
+        <div className="mt-4">
+          Info about event...., 5 people, from... to... {activeReservation}
+        </div>
+      )}
+
+      {!selectedDates?.startDate && !activeReservation ? (
+        <div className="flex self-center mt-4">
+          <PrimaryButton
+            type="submit"
+            disabled
+            label={
+              activeReservation || isError === "dates-reserved"
+                ? "Request To Join"
+                : "Book"
+            }
+          />
+        </div>
+      ) : (
+        <Link
+          href={{
+            pathname: "/book",
+            // query: activeReservation, // TODO: id activeReservation, pass its dates
+          }}
+          className="flex self-center mt-4"
+        >
+          <PrimaryButton
+            type="submit"
+            label={
+              activeReservation || isError === "dates-reserved"
+                ? "Request To Join"
+                : "Book"
+            }
+          />
+        </Link>
+      )}
     </div>
   );
 };
