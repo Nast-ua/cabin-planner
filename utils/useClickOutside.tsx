@@ -9,15 +9,14 @@ import { useEffect, useRef } from "react";
  *
  * Beware to wrap on Click in useCallback, if necessary.
  */
-export default function useClickOutside(onClick: () => void) {
+export default function useClickOutside(onClick: (id?: string) => void) {
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    function handleClickOutside(e: globalThis.MouseEvent) {
+    function handleClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClick();
+        onClick(e.target?.id);
       }
-      // console.log(e);
     }
 
     document.addEventListener("mousedown", handleClickOutside);

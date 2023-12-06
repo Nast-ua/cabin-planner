@@ -19,7 +19,7 @@ const ReservedFlag = ({
   const [, setActiveReservation] = useActiveReservation();
 
   const handleClickOutside = useCallback(
-    () => setActiveReservation(null),
+    (id?: string) => !id?.startsWith("reserved") && setActiveReservation(null),
     [setActiveReservation]
   );
 
@@ -95,7 +95,12 @@ const ReservedFlag = ({
         } rounded-lg focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-900/90
         sm:shadow-lg sm:rounded-md pl-4 sm:bottom-[7%] cursor-pointer hover:opacity-70`}
       >
-        <p className="hidden truncate sm:block mt-[6px] ">Event Dolor... </p>
+        <p
+          id={`reserved${start}`}
+          className="hidden truncate sm:block mt-[6px] "
+        >
+          Event Dolor...
+        </p>
       </div>
     );
   }

@@ -30,22 +30,10 @@ const Week = ({
   const weekdays = daysOfWeek.map((_, i) => {
     const day = dayjs(startOfWeek).add(i, "days");
 
-    const isReserved =
-      (!!reservations?.length &&
-        reservations?.find(({ startDay, duration }) =>
-          day.isBetween(
-            dayjs(startDay),
-            dayjs(startDay).add(duration, "day"),
-            "days",
-            "[]"
-          )
-        )) ||
-      false;
-
     return {
       key: day.format("YYYYMMDD"),
       day: day.date(),
-      disabled: day.isBefore(dayjs(), "day") || !!isReserved,
+      disabled: day.isBefore(dayjs(), "day"),
       highlight:
         day.get("month") !== currentMonth || day.isBefore(dayjs(), "day")
           ? "pastDay"
