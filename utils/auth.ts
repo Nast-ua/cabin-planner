@@ -1,3 +1,4 @@
+"use server";
 import { auth } from "@clerk/nextjs";
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
