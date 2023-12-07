@@ -1,5 +1,6 @@
 import ControlledDateInput from "@/components/controlled-date-input";
 import SecondaryButton from "@/components/secondary-button";
+import SelectInput from "@/components/select-input";
 import SubmitButton from "@/components/submit-button";
 import { handleBook } from "@/utils/actions";
 
@@ -28,64 +29,28 @@ const BookPage = ({
           className="border-2 border-black/5 rounded-lg px-4 py-2 mt-1 mb-6"
         />
 
-        <label htmlFor="family-tree-select" className="text-[12px] pl-1">
-          Select a Family Tree
-        </label>
-
-        <select
-          name="family-tree-names"
-          id="family-tree-select"
-          required
-          className="border-2 border-black/5 rounded-lg px-4 py-2 mt-2 mb-6 appearance-none
-          bg-chevron-down bg-no-repeat bg-right-4 bg-[length:16px_16px]"
-        >
-          <option value="richard">Family Richard</option>
-          <option value="irmgard">Family Irmgard</option>
-          <option value="eberhard">Family Eberhard</option>
-          <option value="albert">Family Albert</option>
-          <option value="ulrich">Family Ulrich</option>
-        </select>
-
         <div className="flex mb-6 xs:flex-col">
-          <div className="flex flex-1 flex-col">
-            <label htmlFor="family-tree-select" className="text-[12px] pl-1">
-              Select a Family Tree
-            </label>
+          <SelectInput
+            label="Select a Family Tree?"
+            inputName="family-tree-names"
+            inputId="family-tree-select"
+            options={[
+              { id: "richard", title: "Family Richard" },
+              { id: "irmgard", title: "Family Irmgard" },
+              { id: "eberhard", title: "Family Eberhard" },
+              { id: "albert", title: "Family Albert" },
+              { id: "ulrich", title: "Family Ulrich" },
+            ]}
+            className="flex-1"
+          />
 
-            <select
-              name="family-tree-names"
-              id="family-tree-select"
-              required
-              className="border-2 border-black/5 rounded-lg px-4 py-2 mt-2 appearance-none
-          bg-chevron-down bg-no-repeat bg-right-4 bg-[length:16px_16px]"
-            >
-              <option value="richard">Family Richard</option>
-              <option value="irmgard">Family Irmgard</option>
-              <option value="eberhard">Family Eberhard</option>
-              <option value="albert">Family Albert</option>
-              <option value="ulrich">Family Ulrich</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col sm:mt-0 ml-2 xs:ml-0 xs:mt-4">
-            <label htmlFor="family-tree-select" className="text-[12px] pl-1">
-              How many visitors?
-            </label>
-
-            <select
-              name="visitors"
-              id="visitors"
-              required
-              className="border-2 border-black/5 rounded-lg px-4 py-2 mt-2 appearance-none
-          bg-chevron-down bg-no-repeat bg-right-4 bg-[length:16px_16px]"
-            >
-              {Array.from({ length: 13 }).map((_, index) => (
-                <option key={index.toString()} value={index + 1}>
-                  {index + 1}
-                </option>
-              ))}
-            </select>
-          </div>
+          <SelectInput
+            label="How many visitors?"
+            inputName="visitors"
+            inputId="visitors"
+            options={Array.from({ length: 13 })}
+            className="ml-2 xs:ml-0 xs:mt-4 "
+          />
         </div>
 
         <div className="flex mb-6 xs:flex-col">

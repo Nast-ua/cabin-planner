@@ -52,23 +52,9 @@ const ControlledDateInput = ({ type, ...rest }: ControlledDateInputProps) => {
   // TODO: fetch reserved dates
   const reservations = [
     { startDay: "20231203", endDay: "20231210", duration: 7 },
-    { startDay: "20231219", endDay: "20231220", duration: 0 },
+    { startDay: "20231213", endDay: "20231219", duration: 6 },
+    { startDay: "20231219", endDay: "20231220", duration: 1 },
   ];
-
-  const selectedDatesOverlap =
-    selectedDates?.startDate && selectedDates.endDate
-      ? !!reservations?.length &&
-        Boolean(
-          reservations.find(({ startDay, endDay }) =>
-            checkIfDatesOverlap({
-              start1: startDay,
-              end1: endDay,
-              start2: selectedDates.startDate!,
-              end2: selectedDates.endDate!,
-            })
-          )
-        )
-      : false;
 
   const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -88,6 +74,29 @@ const ControlledDateInput = ({ type, ...rest }: ControlledDateInputProps) => {
       dayjs(e.target.value).isBefore(dayjs(selectedDates?.startDate))
     )
       setIsError("end-date-less-than-start-date");
+
+    const selectedDatesOverlap =
+      !!reservations?.length &&
+      Boolean(
+        reservations.find(({ startDay, endDay }) =>
+          checkIfDatesOverlap({
+            start1: startDay,
+            end1: endDay,
+            start2:
+              type === "start"
+                ? e.target.value
+                : selectedDates?.startDate || defaultDate,
+            end2: type === "end" ? e.target.value : undefined,
+          })
+        )
+      );
+
+    console.log(
+      selectedDatesOverlap,
+      selectedDates?.startDate,
+      selectedDates?.endDate,
+      e.target.value
+    );
 
     if (selectedDatesOverlap) setIsError("dates-reserved");
   };
