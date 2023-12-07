@@ -6,11 +6,7 @@ import { handleBook } from "@/utils/actions";
 
 import Link from "next/link";
 
-const BookPage = ({
-  searchParams,
-}: {
-  searchParams?: { startDate: string | null; endDate: string | null };
-}) => {
+const BookPage = () => {
   return (
     <div>
       <h4 className="text-lg">Fill out the form & book your weekend!</h4>

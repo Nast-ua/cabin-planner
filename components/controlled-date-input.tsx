@@ -91,13 +91,6 @@ const ControlledDateInput = ({ type, ...rest }: ControlledDateInputProps) => {
         )
       );
 
-    console.log(
-      selectedDatesOverlap,
-      selectedDates?.startDate,
-      selectedDates?.endDate,
-      e.target.value
-    );
-
     if (selectedDatesOverlap) setIsError("dates-reserved");
   };
 

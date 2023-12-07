@@ -48,7 +48,7 @@ dayjs.extend(isBetween);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-const Calender = ({ initialDate }: { initialDate?: string }) => {
+const Calender = () => {
   const router = useRouter();
 
   const { selectedDates, isError } = useSelectDates();
@@ -57,7 +57,7 @@ const Calender = ({ initialDate }: { initialDate?: string }) => {
   const [selectedView, setSelectedView] = useState<"month" | "year">("month");
 
   const [selectedDate, setSelectedDate] = useState(
-    dayjs(initialDate || selectedDates?.startDate).format("YYYYMMDD")
+    dayjs(selectedDates?.startDate).format("YYYYMMDD")
   );
 
   const months = dayjs().localeData().months();
