@@ -49,22 +49,28 @@ const Week = ({
     setIsError(null);
     setActiveReservation(null);
 
-    // Overlap can occur only if startDate has been already selected
-    const selectedDatesOverlap = selectedDates?.startDate
-      ? !!reservations?.length &&
-        Boolean(
-          reservations.find(({ startDay, endDay }) =>
-            checkIfDatesOverlap({
-              start1: startDay,
-              end1: endDay,
-              start2: selectedDates.startDate!,
-              end2: date,
-            })
-          )
+    const selectedDatesOverlap =
+      !!reservations?.length &&
+      Boolean(
+        reservations.find(({ startDay, endDay }) =>
+          checkIfDatesOverlap({
+            start1: startDay,
+            end1: endDay,
+            start2: selectedDates?.startDate || date,
+            end2:
+              selectedDates?.endDate === date || !selectedDates?.startDate
+                ? undefined
+                : date,
+          })
         )
-      : false;
+      );
 
-    if (selectedDatesOverlap) setIsError("dates-reserved");
+    if (
+      selectedDatesOverlap &&
+      ((selectedDates?.endDate && selectedDates?.startDate === date) ||
+        selectedDates?.startDate !== date)
+    )
+      setIsError("dates-reserved");
 
     if (selectedDates?.startDate && date !== selectedDates?.startDate) {
       setSelectedDates((prevDates) =>
@@ -130,7 +136,10 @@ const Week = ({
             start={startDay}
             duration={duration}
             isActive={activeReservation === startDay}
-            onClick={() => setActiveReservation(startDay)}
+            onClick={() => {
+              setActiveReservation(startDay);
+              setSelectedDates(null);
+            }}
           />
         ))}
     </div>

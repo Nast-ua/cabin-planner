@@ -17,9 +17,8 @@ import weekOfYear from "dayjs/plugin/weekOfYear";
 import weekday from "dayjs/plugin/weekday";
 
 import useActiveReservation from "@/utils/useActiveReservation";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ErrorMessage from "../error-message";
 import PrimaryButton from "../primary-button";
 
 dayjs.extend(localeData);
@@ -50,6 +49,8 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 const Calender = ({ initialDate }: { initialDate?: string }) => {
+  const router = useRouter();
+
   const { selectedDates, isError } = useSelectDates();
   const [activeReservation] = useActiveReservation();
 
@@ -82,8 +83,8 @@ const Calender = ({ initialDate }: { initialDate?: string }) => {
     setSelectedView("month");
   };
 
-  const selectedMonth = dayjs(selectedDate).get("month");
-  const selectedYear = dayjs(selectedDate).get("year");
+  const selectedMonth = dayjs(selectedDate || undefined).get("month");
+  const selectedYear = dayjs(selectedDate || undefined).get("year");
 
   return (
     <div className="flex flex-col max-w-[860px]">
@@ -99,54 +100,45 @@ const Calender = ({ initialDate }: { initialDate?: string }) => {
         onPressPrevious={handlePressPrevious}
       />
 
-      {selectedView === "month" ? (
-        <Month month={selectedMonth} year={selectedYear} />
-      ) : (
+      {selectedView === "year" ? (
         <Year onPressMonth={handleChooseMonth} />
-      )}
-
-      {isError === "dates-reserved" ? (
-        <ErrorMessage text="Please, select dates, which do not overlap with existing event!" />
       ) : (
-        <div className="h-[18px]" />
-      )}
+        <div className="flex flex-col">
+          <Month month={selectedMonth} year={selectedYear} />
 
-      {/* TODO: */}
-      {activeReservation && (
-        <div className="mt-4">
-          Info about event...., 5 people, from... to... {activeReservation}
-        </div>
-      )}
+          {/* TODO: */}
+          {activeReservation && (
+            <div className="mt-4">
+              Info about event...., 5 people, from... to... {activeReservation}
+            </div>
+          )}
 
-      {!selectedDates?.startDate && !activeReservation ? (
-        <div className="flex self-center mt-4">
-          <PrimaryButton
-            type="submit"
-            disabled
-            label={
-              activeReservation || isError === "dates-reserved"
-                ? "Request To Join"
-                : "Book"
-            }
-          />
+          {isError === "dates-reserved" && (
+            <div className="mt-4">
+              The dates you have selected overlap with an existing event{" "}
+              {activeReservation}. Do you want to request to join it instead?
+            </div>
+          )}
+
+          <div className="flex self-center mt-4">
+            <PrimaryButton
+              id="button"
+              type="submit"
+              disabled={!selectedDates?.startDate && !activeReservation}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // TODO: Set Selected dates to reservation dates
+                router.push("/book");
+              }}
+              label={
+                activeReservation || isError === "dates-reserved"
+                  ? "Request To Join"
+                  : "Book"
+              }
+            />
+          </div>
         </div>
-      ) : (
-        <Link
-          href={{
-            pathname: "/book",
-            // query: activeReservation, // TODO: id activeReservation, pass its dates
-          }}
-          className="flex self-center mt-4"
-        >
-          <PrimaryButton
-            type="submit"
-            label={
-              activeReservation || isError === "dates-reserved"
-                ? "Request To Join"
-                : "Book"
-            }
-          />
-        </Link>
       )}
     </div>
   );

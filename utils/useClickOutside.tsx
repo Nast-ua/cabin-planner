@@ -15,7 +15,7 @@ export default function useClickOutside(onClick: (id?: string) => void) {
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClick(e.target?.id);
+        e.target?.id !== "button" && onClick(e.target?.id);
       }
     }
 
