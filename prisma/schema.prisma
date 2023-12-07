@@ -23,14 +23,13 @@ model User {
 }
 
 model Event {
-  id        String   @id @default(uuid())
-  name      String
-  startDate DateTime
-  duration  Int
-  approved  Boolean  @default(false)
+  id           String   @id @default(uuid())
+  name         String
+  startDate    DateTime
+  endDate      DateTime
+  duration     Int
+  participants Int
+  approved     Boolean  @default(false)
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  @@unique([userId])
+  users User[]
 }
