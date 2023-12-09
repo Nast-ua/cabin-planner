@@ -17,6 +17,7 @@ model User {
   name      String?
   createdAt DateTime @default(now())
   admin     Boolean? @default(false)
+  approved  Boolean  @default(false)
 
   clerkId String  @unique
   events  Event[]
@@ -32,4 +33,6 @@ model Event {
   approved     Boolean  @default(false)
 
   users User[]
+
+  @@unique([id, startDate])
 }
