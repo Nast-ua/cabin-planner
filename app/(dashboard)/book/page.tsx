@@ -1,8 +1,8 @@
-import ControlledDateInput from "@/components/controlled-date-input";
+import DatesInput from "@/components/dates-input";
 import SecondaryButton from "@/components/secondary-button";
 import SelectInput from "@/components/select-input";
 import SubmitButton from "@/components/submit-button";
-import { handleBook } from "@/utils/actions";
+import { createReservation } from "@/utils/actions";
 
 import Link from "next/link";
 
@@ -49,23 +49,7 @@ const BookPage = () => {
           />
         </div>
 
-        <div className="flex mb-6 xs:flex-col">
-          <div className="flex flex-col">
-            <label htmlFor="from-date" className="text-[12px] pl-1">
-              From
-            </label>
-
-            <ControlledDateInput id="startDate" name="startDate" type="start" />
-          </div>
-
-          <div className="flex flex-col ml-2 mb-4 xs:ml-0 xs:mt-4">
-            <label htmlFor="to-date" className="text-[12px] pl-1">
-              To
-            </label>
-
-            <ControlledDateInput id="endDate" name="endDate" type="end" />
-          </div>
-        </div>
+        <DatesInput />
 
         <div className="flex xxs:flex-col items-center xxs:justify-center xxs:self-center">
           <Link href={{ pathname: "/availability" }}>
@@ -76,7 +60,11 @@ const BookPage = () => {
             />
           </Link>
 
-          <SubmitButton value="book" label="Book" formAction={handleBook} />
+          <SubmitButton
+            value="book"
+            label="Book"
+            formAction={createReservation}
+          />
         </div>
       </form>
     </div>

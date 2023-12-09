@@ -115,7 +115,7 @@ const Calender = () => {
 
           {isError === "dates-reserved" && (
             <div className="mt-4">
-              The dates you have selected overlap with an existing event{" "}
+              The dates you have selected overlap with an existing event
               {activeReservation}. Do you want to request to join it instead?
             </div>
           )}
