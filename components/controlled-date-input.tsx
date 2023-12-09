@@ -3,10 +3,15 @@ import checkIfDatesOverlap from "@/utils/checkIfDatesOverlap";
 import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
 import { DetailedHTMLProps, useCallback } from "react";
-import ErrorMessage from "./error-message";
 
 export type ControlledDateInputProps = {
   type: "start" | "end";
+  validationError?: "start" | "end" | null;
+  onChangeDate?: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    type: "start" | "end",
+    fallbackDate: string
+  ) => void;
 } & Omit<
   DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
@@ -15,9 +20,13 @@ export type ControlledDateInputProps = {
   "type | required | value | onChange | className"
 >;
 
-const ControlledDateInput = ({ type, ...rest }: ControlledDateInputProps) => {
-  const { selectedDates, setSelectedDates, isError, setIsError } =
-    useSelectDates();
+const ControlledDateInput = ({
+  type,
+  validationError,
+  onChangeDate,
+  ...rest
+}: ControlledDateInputProps) => {
+  const { selectedDates, setSelectedDates, setIsError } = useSelectDates();
 
   const endOfWeek = dayjs().endOf("week");
 
@@ -62,18 +71,7 @@ const ControlledDateInput = ({ type, ...rest }: ControlledDateInputProps) => {
     setIsError(null);
     synchronizeSelectedDates(e.target.value);
 
-    if (
-      type === "start" &&
-      selectedDates?.endDate &&
-      dayjs(e.target.value).isAfter(dayjs(selectedDates?.endDate))
-    )
-      setIsError("start-date-less-than-end-date");
-    else if (
-      type === "end" &&
-      selectedDates?.startDate &&
-      dayjs(e.target.value).isBefore(dayjs(selectedDates?.startDate))
-    )
-      setIsError("end-date-less-than-start-date");
+    onChangeDate && onChangeDate(e, type, defaultDate);
 
     const selectedDatesOverlap =
       !!reservations?.length &&
@@ -94,16 +92,22 @@ const ControlledDateInput = ({ type, ...rest }: ControlledDateInputProps) => {
     if (selectedDatesOverlap) setIsError("dates-reserved");
   };
 
-  const showError =
-    (type === "start" && isError === "start-date-less-than-end-date") ||
-    (type === "end" && isError === "end-date-less-than-start-date");
-
   return (
     <div>
       <input
         {...rest}
         type="date"
-        min={dayjs().startOf("day").format("YYYY-MM-DD")}
+        min={
+          type === "end"
+            ? dayjs(selectedDates?.startDate || undefined).format("YYYY-MM-DD")
+            : dayjs().startOf("day").format("YYYY-MM-DD")
+        }
+        max={
+          (type === "start" &&
+            selectedDates?.endDate &&
+            dayjs(selectedDates.endDate).format("YYYY-MM-DD")) ||
+          undefined
+        }
         required
         value={
           type === "start"
@@ -116,16 +120,9 @@ const ControlledDateInput = ({ type, ...rest }: ControlledDateInputProps) => {
         }
         onChange={handleChangeDate}
         className={`border-2 ${
-          showError ? "border-red-300" : "border-black/5"
+          validationError === type ? "border-red-300" : "border-black/5"
         } rounded-lg px-4 py-2 mt-2`}
       />
-
-      {showError && (
-        <ErrorMessage
-          text="The start date should be earlier than the end date."
-          className="max-w-[168px] pl-2 -mb-[36px]"
-        />
-      )}
     </div>
   );
 };

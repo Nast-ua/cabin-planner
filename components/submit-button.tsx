@@ -13,11 +13,13 @@ export const SubmitButton = ({
 }: SubmitButtonProps) => {
   const { pending } = useFormStatus();
   const { isError } = useSelectDates();
-
+  // TODO: Change to join if "dates-reserved"
   return (
     <PrimaryButton
       isLoading={pending}
-      disabled={!!isError || pending || disabled}
+      disabled={
+        (!!isError && isError !== "dates-reserved") || pending || disabled
+      }
       label={label}
       {...rest}
     />
