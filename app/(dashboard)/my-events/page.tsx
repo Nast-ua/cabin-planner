@@ -4,7 +4,6 @@ import { getMyEvents } from "@/utils/data";
 const MyEventsPage = async () => {
   const myEvents = await getMyEvents();
 
-  console.log(myEvents);
   return (
     <div className="flex flex-1 flex-col">
       My Events Page

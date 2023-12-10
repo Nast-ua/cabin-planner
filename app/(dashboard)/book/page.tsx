@@ -13,7 +13,7 @@ const BookPage = () => {
 
       <form className="flex flex-col mt-6 max-w-[480px]">
         <label htmlFor="name" className="text-[12px] pl-1">
-          Name
+          Your Name
         </label>
 
         <input
@@ -28,8 +28,8 @@ const BookPage = () => {
         <div className="flex mb-6 xs:flex-col">
           <SelectInput
             label="Select a Family Tree?"
-            inputName="family-tree-names"
-            inputId="family-tree-select"
+            inputName="family-tree"
+            inputId="family-tree"
             options={[
               { id: "richard", title: "Family Richard" },
               { id: "irmgard", title: "Family Irmgard" },
@@ -42,8 +42,8 @@ const BookPage = () => {
 
           <SelectInput
             label="How many visitors?"
-            inputName="visitors"
-            inputId="visitors"
+            inputName="participants"
+            inputId="participants"
             options={Array.from({ length: 13 })}
             className="ml-2 xs:ml-0 xs:mt-4 "
           />

@@ -30,9 +30,10 @@ model Event {
   endDate      DateTime
   duration     Int
   participants Int
+  familyTree   String
   approved     Boolean  @default(false)
 
   users User[]
 
-  @@unique([id, startDate])
+  @@unique([id, startDate]) // TODO: Add unique indices
 }

@@ -1,14 +1,23 @@
-"use server";
 import { prisma } from "@/utils/db";
 
-import { getUserByClerkID } from "./auth";
+import { auth } from "@clerk/nextjs";
 
 export const getMyEvents = async () => {
-  const user = await getUserByClerkID({});
+  const { userId } = await auth();
 
-  const events = await prisma.event.findMany({
-    where: { userId: user.id, startDate: { gte: new Date() } },
-    orderBy: { startDate: "asc" },
+  return await prisma.event.findMany({
+    where: {
+      startDate: { gte: new Date() },
+      users: { some: { clerkId: userId as string } },
+    },
+    orderBy: {
+      startDate: "desc",
+    },
   });
-  return events;
+};
+
+export const getEventById = async (id: string) => {
+  return await prisma.event.findUnique({
+    where: { id },
+  });
 };
