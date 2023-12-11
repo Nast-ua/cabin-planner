@@ -52,32 +52,32 @@ const EventCard = ({
   }`;
 
   return (
-    <div className="flex flex-col border-2 border-black/5 rounded-lg p-2 max-w-[480px]">
-      <div className="flex flex-row">
-        <div className="flex max-w-[30%] xs:max-w-[40%] py-1 pr-4 border-r border-black/5">
-          <div className="flex items-center bg-sky-700/30 rounded-md p-2">
+    <div className="flex-1  flex-col border-2 border-black/5 rounded-lg px-4 py-2 max-w-[480px]">
+      <div className="flex flex-row xxs:flex-col">
+        <div className="flex max-w-[35%] xs:max-w-[50%] xxs:max-w-full py-2 xxs:pb-4 pr-4 xxs:pr-0 border-r xxs:border-r-0 xxs:border-b border-black/5">
+          <div className="flex-1 items-center bg-sky-700/30 rounded-md p-2 ">
             <div className="text-4 text-sky-900">{`${startFormatted} - ${endFormatted}`}</div>
           </div>
         </div>
 
-        <div className="ml-4 my-auto p-1 flex flex-col items-start">
-          <h3 className="text-xl text-left">{title}</h3>
+        <div className="ml-4 py-2 my-auto flex flex-col items-start relative xxs:ml-0">
+          <h3 className="text-xl text-left xxs:max-w-[53%]">{title}</h3>
 
-          <p className="text-left text-black/50 text-[12px]">{`reserved for ${participants} people`}</p>
+          <p className="text-left text-black/50 text-[12px] xxs:max-w-[53%]">{`reserved for ${participants} people`}</p>
 
           <div
             className={`mt-1 text-[10px] ${
               approved
                 ? "text-green-800 bg-green-500/60 border border-green-800"
                 : "text-violet-800 bg-violet-400/60 border border-violet-800"
-            } rounded-full px-2 py-1 `}
+            } rounded-full px-2 py-1 xxs:absolute xxs:right-0 xxs:max-w-[40%] xxs:rounded-lg xxs:text-center`}
           >
             {approved ? "approved" : "request sent"}
           </div>
         </div>
       </div>
 
-      <div className="flex xxs:flex-col-reverse items-center xxs:self-start mt-4 xxs:mt-3">
+      <div className="flex xxs:flex-col-reverse items-center xxs:self-center mt-4 xxs:mt-3">
         <SecondaryButton
           label="Delete"
           gradient={["from-red-400", "to-red-400"]}
