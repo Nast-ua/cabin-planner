@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import Week from "./week";
 
 const Month = ({ month, year }: { month: number; year: number }) => {
-  const [reservations, setReservations] = useState<Reservation[]>([]); // TODO: Type!!!
+  const [reservations, setReservations] = useState<Reservation[]>([]);
 
   const fetchReservations = useCallback(
     () => getReservationsForMonth(month),

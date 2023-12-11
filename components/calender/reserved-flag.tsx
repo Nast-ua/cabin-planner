@@ -56,9 +56,9 @@ const ReservedFlag = ({
 
     const maxIndex = 31;
     const colorIndex = Math.round(
-      (parseInt(start.slice(-2), 10) / maxIndex) * COLORS.length
+      (reservationStart.get("date") / maxIndex) * COLORS.length
     );
-    console.log(colorIndex);
+    console.log(start, colorIndex);
     return (
       <div
         id={`reserved${start}`}
