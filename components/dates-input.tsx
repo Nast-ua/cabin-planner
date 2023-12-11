@@ -36,7 +36,7 @@ function DatesInput() {
 
   return (
     <div className="relative flex mb-6 xs:flex-col">
-      <div className="flex flex-col">
+      <div className="flex-1 flex-col">
         <label htmlFor="from-date" className="text-[12px] pl-1">
           From
         </label>
@@ -50,7 +50,7 @@ function DatesInput() {
         />
       </div>
 
-      <div className="flex flex-col ml-2 mb-4 xs:ml-0 xs:mt-4">
+      <div className="flex-1 flex-col ml-2 mb-4 xs:ml-0 xs:mt-4">
         <label htmlFor="to-date" className="text-[12px] pl-1">
           To
         </label>

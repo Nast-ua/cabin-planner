@@ -93,7 +93,7 @@ const ControlledDateInput = ({
   };
 
   return (
-    <div>
+    <div className="flex-1">
       <input
         {...rest}
         type="date"
@@ -121,7 +121,7 @@ const ControlledDateInput = ({
         onChange={handleChangeDate}
         className={`border-2 ${
           validationError === type ? "border-red-300" : "border-black/5"
-        } rounded-lg px-4 py-2 mt-2`}
+        } rounded-lg px-4 py-2 mt-2 w-full`}
       />
     </div>
   );

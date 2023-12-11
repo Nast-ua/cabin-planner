@@ -8,7 +8,8 @@ const MyEventsPage = async () => {
     <div className="flex flex-1 flex-col">
       <div className="mb-6">My Events Page</div>
 
-      <div>2023</div>
+      <div className="px-1 mb-1">Jahr 2023</div>
+
       {myEvents.map(
         ({ id, name, startDate, endDate, participants, approved }) => (
           <EventCard
