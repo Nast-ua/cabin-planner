@@ -17,10 +17,12 @@ import weekOfYear from "dayjs/plugin/weekOfYear";
 import weekday from "dayjs/plugin/weekday";
 
 import useActiveReservation from "@/utils/useActiveReservation";
+import "dayjs/locale/de";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import PrimaryButton from "../primary-button";
 
+dayjs.locale("de");
 dayjs.extend(localeData);
 dayjs.extend(updateLocale);
 dayjs.updateLocale("de", {

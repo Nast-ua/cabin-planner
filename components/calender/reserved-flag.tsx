@@ -3,6 +3,7 @@ import useClickOutside from "@/utils/useClickOutside";
 import dayjs from "dayjs";
 import { useCallback } from "react";
 
+// TODO: Memoize me!
 const ReservedFlag = ({
   startOfWeek,
   start,
@@ -58,7 +59,7 @@ const ReservedFlag = ({
     const colorIndex = Math.round(
       (reservationStart.get("date") / maxIndex) * COLORS.length
     );
-    console.log(start, colorIndex);
+
     return (
       <div
         id={`reserved${start}`}

@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/de";
 import { Inter } from "next/font/google";
 import "./globals.css";
+
 dayjs.locale("de");
 
 const inter = Inter({ subsets: ["latin"] });
