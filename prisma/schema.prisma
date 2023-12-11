@@ -35,5 +35,5 @@ model Event {
 
   users User[]
 
-  @@unique([id, startDate]) // TODO: Add unique indices
+  @@unique([id, startDate]) // TODO: Add unique indices for relation fields
 }

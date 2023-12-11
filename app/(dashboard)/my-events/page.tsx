@@ -6,12 +6,23 @@ const MyEventsPage = async () => {
 
   return (
     <div className="flex flex-1 flex-col">
-      My Events Page
-      <EventCard />
-      {myEvents.map((event) => (
-        <div key={event.id}>{event.id}</div>
-      ))}
+      <div className="mb-6">My Events Page</div>
+
+      <div>2023</div>
+      {myEvents.map(
+        ({ id, name, startDate, endDate, participants, approved }) => (
+          <EventCard
+            key={id}
+            title={name}
+            startDate={startDate.toString()}
+            endDate={endDate.toString()}
+            participants={participants}
+            approved={approved}
+          />
+        )
+      )}
     </div>
   );
 };
+
 export default MyEventsPage;

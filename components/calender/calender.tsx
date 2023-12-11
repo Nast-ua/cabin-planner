@@ -23,7 +23,7 @@ import PrimaryButton from "../primary-button";
 
 dayjs.extend(localeData);
 dayjs.extend(updateLocale);
-dayjs.updateLocale("en", {
+dayjs.updateLocale("de", {
   months: [
     "Januar",
     "Februar",
@@ -41,6 +41,7 @@ dayjs.updateLocale("en", {
   weekdaysShort: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
   weekStart: 1,
 });
+
 dayjs.extend(weekday);
 dayjs.extend(utc);
 dayjs.extend(weekOfYear);

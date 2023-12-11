@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 
 export default async function Home() {
-  const { userId } = await auth();
+  const { userId } = await auth(); // get user from databank
 
   const href = userId ? "/my-events" : "/new-user";
   return (
