@@ -50,7 +50,7 @@ export async function createReservation(formData: FormData) {
     console.log(e);
   }
 
-  update(["/my-events"]);
+  update(["/my-events", "/availability"]);
   redirect("/my-events");
 }
 

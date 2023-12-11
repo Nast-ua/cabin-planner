@@ -12,15 +12,15 @@ dayjs.extend(isSameOrAfter);
 const Week = ({
   startOfWeek,
   reservations = [
-    { startDay: "20231203", endDay: "20231210", duration: 7 },
-    { startDay: "20231213", endDay: "20231219", duration: 6 },
-    { startDay: "20231219", endDay: "20231220", duration: 1 },
+    { startDate: "20231203", endDate: "20231210", duration: 7 },
+    { startDate: "20231213", endDate: "20231219", duration: 6 },
+    { startDate: "20231219", endDate: "20231220", duration: 1 },
   ], // todo: get real data
   currentMonth,
 }: {
   startOfWeek: string;
   currentMonth: number;
-  reservations?: { startDay: string; endDay: string; duration: number }[];
+  reservations?: { startDate: string; endDate: string; duration: number }[];
 }) => {
   const [activeReservation, setActiveReservation] = useActiveReservation();
 
@@ -52,10 +52,10 @@ const Week = ({
     const selectedDatesOverlap =
       !!reservations?.length &&
       Boolean(
-        reservations.find(({ startDay, endDay }) =>
+        reservations.find(({ startDate, endDate }) =>
           checkIfDatesOverlap({
-            start1: startDay,
-            end1: endDay,
+            start1: startDate,
+            end1: endDate,
             start2: selectedDates?.startDate || date,
             end2:
               selectedDates?.endDate === date || !selectedDates?.startDate
@@ -129,15 +129,15 @@ const Week = ({
       ))}
 
       {!!reservations?.length &&
-        reservations.map(({ startDay, duration }) => (
+        reservations.map(({ startDate, duration }) => (
           <ReservedFlag
-            key={startOfWeek + startDay}
+            key={startOfWeek + startDate}
             startOfWeek={startOfWeek}
-            start={startDay}
+            start={startDate}
             duration={duration}
-            isActive={activeReservation === startDay}
+            isActive={activeReservation === startDate}
             onClick={() => {
-              setActiveReservation(startDay);
+              setActiveReservation(startDate);
               setSelectedDates(null);
             }}
           />

@@ -1,8 +1,28 @@
 import dayjs from "dayjs";
 
+import { getReservationsForMonth } from "@/utils/api";
+import { Reservation } from "@/utils/types";
+import { useCallback, useEffect, useState } from "react";
 import Week from "./week";
 
 const Month = ({ month, year }: { month: number; year: number }) => {
+  const [reservations, setReservations] = useState<Reservation[]>([]); // TODO: Type!!!
+
+  const fetchReservations = useCallback(
+    () => getReservationsForMonth(month),
+    [month]
+  );
+
+  useEffect(() => {
+    async function getData() {
+      const data = (await fetchReservations())?.data;
+
+      setReservations(data);
+    }
+
+    getData();
+  }, [fetchReservations]);
+
   const startOfMonth = dayjs().month(month).year(year).startOf("month");
   const endOfMonth = startOfMonth.endOf("month");
 
@@ -47,6 +67,7 @@ const Month = ({ month, year }: { month: number; year: number }) => {
           key={key}
           startOfWeek={startOfWeek}
           currentMonth={startOfMonth.get("month")}
+          reservations={reservations}
         />
       ))}
     </div>
