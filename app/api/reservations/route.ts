@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     const reservations = await prisma.event.findMany({
       where,
       orderBy: {
-        startDate: "desc",
+        startDate: "asc",
       },
     });
 

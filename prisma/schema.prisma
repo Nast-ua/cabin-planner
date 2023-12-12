@@ -29,6 +29,7 @@ model Event {
   startDate    DateTime
   endDate      DateTime
   duration     Int
+  createdAt    DateTime @default(now())
   participants Int
   familyTree   String
   approved     Boolean  @default(false)

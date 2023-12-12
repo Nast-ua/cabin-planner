@@ -76,9 +76,18 @@ export async function updateReservation(id: string, formData: FormData) {
   redirect("/my-events");
 }
 
-export async function DeleteReservation(id: string) {
+export async function deleteReservation(id: string) {
+  console.log(id);
+  const user = await getUserByClerkID();
+
+  await prisma.event.delete({
+    where: {
+      id,
+      users: { some: { id: user.id } },
+    },
+  });
+
   update(["/my-events"]);
-  redirect("/my-events");
 }
 
 export async function createAndUpdateReservation(

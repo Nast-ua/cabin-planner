@@ -61,7 +61,8 @@ const BookPage = () => {
             />
           </Link>
 
-          <SubmitButton value="book" formAction={createReservation} />
+          {/* TODO: set selected dates to null onSuccess */}
+          <SubmitButton type="submit" formAction={createReservation} />
         </div>
       </form>
     </div>

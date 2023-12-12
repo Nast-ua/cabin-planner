@@ -11,14 +11,14 @@ export type SubmitButtonProps = Omit<
 
 export const SubmitButton = ({ ...rest }: SubmitButtonProps) => {
   const { pending } = useFormStatus();
-  const { isError, setSelectedDates } = useSelectDates();
+
+  const { isError } = useSelectDates();
 
   return (
     <PrimaryButton
       isLoading={pending}
-      disabled={(!!isError && isError !== "dates-reserved") || pending}
+      disabled={pending}
       label={isError === "dates-reserved" ? "Join" : "Book"}
-      // onClick={() => setSelectedDates(null)}
       {...rest}
     />
   );

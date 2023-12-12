@@ -126,9 +126,9 @@ const Week = ({
       ))}
 
       {!!reservations?.length &&
-        reservations.map(({ startDate, duration, name }) => (
+        reservations.map(({ id, startDate, duration, name }) => (
           <ReservedFlag
-            key={startOfWeek + startDate}
+            key={id}
             startOfWeek={startOfWeek}
             start={startDate}
             duration={duration}

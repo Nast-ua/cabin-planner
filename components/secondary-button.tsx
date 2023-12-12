@@ -1,3 +1,4 @@
+"use client";
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 export type SecondaryButtonProps = {

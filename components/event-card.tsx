@@ -1,5 +1,7 @@
+"use client";
 import dayjs from "dayjs";
 
+import { deleteReservation } from "@/utils/actions";
 import localeData from "dayjs/plugin/localeData";
 import updateLocale from "dayjs/plugin/updateLocale";
 import PrimaryButton from "./primary-button";
@@ -26,12 +28,14 @@ dayjs.updateLocale("de", {
 });
 
 const EventCard = ({
+  id,
   title,
   startDate,
   endDate,
   participants,
   approved,
 }: {
+  id: string;
   title: string;
   startDate: string;
   endDate: string;
@@ -83,6 +87,7 @@ const EventCard = ({
           gradient={["from-red-400", "to-red-400"]}
           labelColor="text-red-400"
           style="xxs:mt-1 "
+          onClick={async () => deleteReservation(id)}
         />
 
         <PrimaryButton label="Edit" />

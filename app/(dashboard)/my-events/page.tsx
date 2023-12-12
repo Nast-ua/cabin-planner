@@ -13,7 +13,7 @@ const MyEventsPage = async () => {
     myEvents?.forEach((event) => {
       if (event?.startDate.getFullYear() === year) {
         const previousObj = eventsByYear;
-        console.log(previousObj);
+
         eventsByYear = {
           ...previousObj,
           [year]: !!previousObj[year] ? [...previousObj[year], event] : [event],
@@ -46,6 +46,7 @@ const MyEventsPage = async () => {
                   )}
 
                   <EventCard
+                    id={id}
                     title={name}
                     startDate={startDate.toString()}
                     endDate={endDate.toString()}
