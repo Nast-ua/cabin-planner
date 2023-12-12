@@ -3,10 +3,11 @@ import { Reservation } from "./types";
 const createURL = (path: string) => window.location.origin + path;
 
 export async function getReservationsForMonth(
-  month: number
+  month: number,
+  year: number
 ): Promise<{ data: Reservation[] }> {
   const res = await fetch(
-    new Request(createURL(`/api/reservations/month/${month}`), {
+    new Request(createURL(`/api/reservations?month=${month}&year=${year}`), {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -14,7 +15,6 @@ export async function getReservationsForMonth(
     })
   );
 
-  // TODO: Validate user / send cookie?
   if (res.ok) {
     return await res.json();
   } else {

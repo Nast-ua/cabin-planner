@@ -1,8 +1,8 @@
 export type Reservation = {
   id: string;
   name: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   duration: number;
   participants: number;
   familyTree: string;

@@ -67,7 +67,7 @@ function DatesInput() {
       {validationError && (
         <ErrorMessage
           text="The start date should be earlier than the end date."
-          className="absolute top-[76px]"
+          className="absolute top-[82px]"
         />
       )}
     </div>

@@ -9,15 +9,18 @@ const Month = ({ month, year }: { month: number; year: number }) => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
   const fetchReservations = useCallback(
-    () => getReservationsForMonth(month),
-    [month]
+    () => getReservationsForMonth(month, year),
+    [month, year]
   );
 
   useEffect(() => {
     async function getData() {
-      const data = (await fetchReservations())?.data;
-
-      setReservations(data);
+      try {
+        const data = (await fetchReservations())?.data;
+        setReservations(data);
+      } catch (e) {
+        console.log(e);
+      }
     }
 
     getData();

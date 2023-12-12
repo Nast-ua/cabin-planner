@@ -45,7 +45,9 @@ const ReservedFlag = ({
     (weekStart.isBetween(reservationStart, reservationEnd, "days", "[]") &&
       weekEnd.isBetween(reservationStart, reservationEnd, "days", "[]"))
   ) {
-    const daysDiff = reservationStart.diff(weekStart, "day");
+    const daysDiff = reservationStart
+      .startOf("d")
+      .diff(weekStart.startOf("d"), "days");
 
     const daysDuration =
       reservationStart.isSameOrAfter(weekStart, "day") &&
@@ -57,7 +59,7 @@ const ReservedFlag = ({
 
     const maxIndex = 31;
     const colorIndex = Math.round(
-      (reservationStart.get("date") / maxIndex) * COLORS.length
+      (reservationStart.get("date") / maxIndex) * COLORS.length - 1
     );
 
     return (
@@ -84,7 +86,7 @@ const ReservedFlag = ({
         } rounded-lg focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-900/90
         sm:shadow-lg sm:rounded-md pl-4 sm:bottom-[7%] cursor-pointer hover:opacity-70`}
       >
-        <p className="hidden truncate sm:block mt-[6px] ">{name}</p>
+        <p className="hidden truncate sm:block mt-[6px]">{name}</p>
       </div>
     );
   }

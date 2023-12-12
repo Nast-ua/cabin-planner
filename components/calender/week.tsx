@@ -2,6 +2,7 @@ import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
 
 import checkIfDatesOverlap from "@/utils/checkIfDatesOverlap";
+import { Reservation } from "@/utils/types";
 import useActiveReservation from "@/utils/useActiveReservation";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import Day, { DayType } from "./day";
@@ -11,16 +12,12 @@ dayjs.extend(isSameOrAfter);
 
 const Week = ({
   startOfWeek,
-  reservations = [
-    { startDate: "20231203", endDate: "20231210", duration: 7 },
-    { startDate: "20231213", endDate: "20231219", duration: 6 },
-    { startDate: "20231219", endDate: "20231220", duration: 1 },
-  ], // todo: get real data
+  reservations,
   currentMonth,
 }: {
   startOfWeek: string;
   currentMonth: number;
-  reservations?: { startDate: string; endDate: string; duration: number }[];
+  reservations?: Reservation[];
 }) => {
   const [activeReservation, setActiveReservation] = useActiveReservation();
 
@@ -129,12 +126,13 @@ const Week = ({
       ))}
 
       {!!reservations?.length &&
-        reservations.map(({ startDate, duration }) => (
+        reservations.map(({ startDate, duration, name }) => (
           <ReservedFlag
             key={startOfWeek + startDate}
             startOfWeek={startOfWeek}
             start={startDate}
             duration={duration}
+            name={name}
             isActive={activeReservation === startDate}
             onClick={() => {
               setActiveReservation(startDate);
