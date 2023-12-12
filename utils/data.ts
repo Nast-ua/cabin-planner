@@ -11,7 +11,7 @@ export const getMyEvents = async () => {
       users: { some: { clerkId: userId as string } },
     },
     orderBy: {
-      startDate: "desc",
+      startDate: "asc",
     },
   });
 };

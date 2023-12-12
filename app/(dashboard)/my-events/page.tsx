@@ -4,8 +4,8 @@ import { getMyEvents } from "@/utils/data";
 const MyEventsPage = async () => {
   const myEvents = await getMyEvents();
 
-  const from = myEvents?.[myEvents.length - 1].startDate.getFullYear();
-  const to = myEvents?.[0].startDate.getFullYear();
+  const from = myEvents?.[0].startDate.getFullYear();
+  const to = myEvents?.[myEvents.length - 1].startDate.getFullYear();
 
   let eventsByYear: { [key: string]: typeof myEvents } = { [from]: [] };
 
