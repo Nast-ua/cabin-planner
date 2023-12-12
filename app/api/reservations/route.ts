@@ -9,12 +9,16 @@ export async function GET(request: NextRequest) {
   if (!user) throw new Error("user-not-found");
 
   const searchParams = request.nextUrl.searchParams;
+
   const month = searchParams.get("month");
   const year = searchParams.get("year");
 
+  // TODO: Add server-side date validation!
+  const from = searchParams.get("from");
+
   let where = {};
 
-  if (month && year) {
+  if (month && month !== "undefined" && year && year !== "undefined") {
     const from = dayjs()
       .set("year", parseInt(year))
       .set("month", parseInt(month))
@@ -25,6 +29,10 @@ export async function GET(request: NextRequest) {
       startDate: { gte: from.subtract(1, "month").toDate() },
       endDate: { lte: to.add(1, "month").toDate() },
     };
+  }
+
+  if (from && from !== "undefined") {
+    where = { ...where, startDate: { gte: new Date(from) } };
   }
 
   try {

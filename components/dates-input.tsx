@@ -1,4 +1,5 @@
 "use client";
+import useQueryReservations from "@/utils/useQueryReservations";
 import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -6,6 +7,11 @@ import ControlledDateInput from "./controlled-date-input";
 import ErrorMessage from "./error-message";
 
 function DatesInput() {
+  const today = dayjs();
+  const reservations = useQueryReservations({
+    from: today.format("YYYY-MM-DD"),
+  });
+
   const [validationError, setValidationError] = useState<
     "start" | "end" | null
   >(null);
@@ -59,6 +65,7 @@ function DatesInput() {
           id="startDate"
           name="startDate"
           type="start"
+          reservations={reservations}
           initialDate={initialStartDate}
           onChangeDate={handlValidateFromInput}
           validationError={validationError}
@@ -74,6 +81,7 @@ function DatesInput() {
           id="endDate"
           name="endDate"
           type="end"
+          reservations={reservations}
           initialDate={initialEndDate}
           onChangeDate={handlValidateToInput}
           validationError={validationError}

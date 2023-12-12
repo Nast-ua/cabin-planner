@@ -1,30 +1,10 @@
 import dayjs from "dayjs";
 
-import { getReservationsForMonth } from "@/utils/api";
-import { Reservation } from "@/utils/types";
-import { useCallback, useEffect, useState } from "react";
+import useQueryReservations from "@/utils/useQueryReservations";
 import Week from "./week";
 
 const Month = ({ month, year }: { month: number; year: number }) => {
-  const [reservations, setReservations] = useState<Reservation[]>([]);
-
-  const fetchReservations = useCallback(
-    () => getReservationsForMonth(month, year),
-    [month, year]
-  );
-
-  useEffect(() => {
-    async function getData() {
-      try {
-        const data = (await fetchReservations())?.data;
-        setReservations(data);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
-    getData();
-  }, [fetchReservations]);
+  const reservations = useQueryReservations({ month, year });
 
   const startOfMonth = dayjs().month(month).year(year).startOf("month");
   const endOfMonth = startOfMonth.endOf("month");

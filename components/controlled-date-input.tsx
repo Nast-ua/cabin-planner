@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { DetailedHTMLProps, useCallback } from "react";
 
+import { Reservation } from "@/utils/types";
 import "dayjs/locale/de";
 
 dayjs.locale("de");
@@ -15,6 +16,7 @@ dayjs.updateLocale("de", {
 
 export type ControlledDateInputProps = {
   type: "start" | "end";
+  reservations: Reservation[];
   initialDate: string;
   validationError?: "start" | "end" | null;
   onChangeDate?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -28,6 +30,7 @@ export type ControlledDateInputProps = {
 
 const ControlledDateInput = ({
   type,
+  reservations,
   initialDate,
   validationError,
   onChangeDate,
@@ -52,13 +55,6 @@ const ControlledDateInput = ({
     [setSelectedDates, type]
   );
 
-  // TODO: fetch reserved dates
-  const reservations = [
-    { startDay: "20231203", endDay: "20231210", duration: 7 },
-    { startDay: "20231213", endDay: "20231219", duration: 6 },
-    { startDay: "20231219", endDay: "20231220", duration: 1 },
-  ];
-
   const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -70,10 +66,10 @@ const ControlledDateInput = ({
     const selectedDatesOverlap =
       !!reservations?.length &&
       Boolean(
-        reservations.find(({ startDay, endDay }) =>
+        reservations.find(({ startDate, endDate }) =>
           checkIfDatesOverlap({
-            start1: startDay,
-            end1: endDay,
+            start1: startDate,
+            end1: endDate,
             start2:
               type === "start"
                 ? e.target.value

@@ -99,6 +99,12 @@ const Week = ({
       }));
   };
 
+  const handleClickReservation = (startDate: string) => {
+    setActiveReservation(startDate);
+    setSelectedDates(null);
+    setIsError(null);
+  };
+
   return (
     <div className="relative flex items-center overflow-hidden sm:items-end ">
       {weekdays.map(({ key, day, disabled, highlight }) => (
@@ -134,10 +140,7 @@ const Week = ({
             duration={duration}
             name={name}
             isActive={activeReservation === startDate}
-            onClick={() => {
-              setActiveReservation(startDate);
-              setSelectedDates(null);
-            }}
+            onClick={() => handleClickReservation(startDate)}
           />
         ))}
     </div>
