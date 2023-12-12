@@ -12,23 +12,37 @@ function DatesInput() {
 
   const { selectedDates } = useSelectDates();
 
-  const handleValidateInput = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    type: "start" | "end",
-    fallbackDate: string
+  const endOfWeek = dayjs().endOf("week");
+
+  const initialStartDate = (
+    (selectedDates?.startDate && dayjs(selectedDates?.startDate)) ||
+    endOfWeek.subtract(2, "days")
+  ).format("YYYY-MM-DD");
+
+  const initialEndDate = (
+    (selectedDates?.endDate && dayjs(selectedDates?.endDate)) ||
+    endOfWeek
+  ).format("YYYY-MM-DD");
+
+  const handlValidateFromInput = (
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setValidationError(null);
+
     if (
-      type === "start" &&
       dayjs(event.target.value).isAfter(
-        dayjs(selectedDates?.endDate || fallbackDate)
+        dayjs(selectedDates?.endDate || initialEndDate)
       )
     )
       setValidationError("start");
-    else if (
-      type === "end" &&
+  };
+
+  const handlValidateToInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValidationError(null);
+
+    if (
       dayjs(event.target.value).isBefore(
-        dayjs(selectedDates?.startDate || fallbackDate)
+        dayjs(selectedDates?.startDate || initialStartDate)
       )
     )
       setValidationError("end");
@@ -37,7 +51,7 @@ function DatesInput() {
   return (
     <div className="relative flex mb-6 xs:flex-col">
       <div className="flex-1 flex-col">
-        <label htmlFor="from-date" className="text-[12px] pl-1">
+        <label htmlFor="startDate" className="text-[12px] pl-1">
           From
         </label>
 
@@ -45,13 +59,14 @@ function DatesInput() {
           id="startDate"
           name="startDate"
           type="start"
-          onChangeDate={(...args) => handleValidateInput(...args)}
+          initialDate={initialStartDate}
+          onChangeDate={handlValidateFromInput}
           validationError={validationError}
         />
       </div>
 
       <div className="flex-1 flex-col ml-2 mb-4 xs:ml-0 xs:mt-4">
-        <label htmlFor="to-date" className="text-[12px] pl-1">
+        <label htmlFor="endDate" className="text-[12px] pl-1">
           To
         </label>
 
@@ -59,7 +74,8 @@ function DatesInput() {
           id="endDate"
           name="endDate"
           type="end"
-          onChangeDate={(...args) => handleValidateInput(...args)}
+          initialDate={initialEndDate}
+          onChangeDate={handlValidateToInput}
           validationError={validationError}
         />
       </div>

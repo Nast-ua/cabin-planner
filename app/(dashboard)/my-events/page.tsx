@@ -4,15 +4,21 @@ import { getMyEvents } from "@/utils/data";
 const MyEventsPage = async () => {
   const myEvents = await getMyEvents();
 
-  const firstYear = myEvents?.[0].startDate.getFullYear();
-  const lastYear = myEvents?.[myEvents.length - 1].startDate.getFullYear();
+  const from = myEvents?.[myEvents.length - 1].startDate.getFullYear();
+  const to = myEvents?.[0].startDate.getFullYear();
 
-  let eventsByYear: { [key: string]: typeof myEvents } = { [firstYear]: [] };
+  let eventsByYear: { [key: string]: typeof myEvents } = { [from]: [] };
 
-  for (let year = firstYear; year <= lastYear; year++) {
+  for (let year = from; year <= to; year++) {
     myEvents?.forEach((event) => {
-      if (event?.startDate.getFullYear() === year)
-        eventsByYear[year] = [...eventsByYear[year], event];
+      if (event?.startDate.getFullYear() === year) {
+        const previousObj = eventsByYear;
+        console.log(previousObj);
+        eventsByYear = {
+          ...previousObj,
+          [year]: !!previousObj[year] ? [...previousObj[year], event] : [event],
+        };
+      }
     });
   }
 
@@ -28,12 +34,9 @@ const MyEventsPage = async () => {
                 { id, name, startDate, endDate, participants, approved },
                 index
               ) => (
-                <div
-                  key={id}
-                  className={`flex xs:flex-col ${index > 0 ? "mt-8" : ""}`}
-                >
+                <div key={id} className="flex xs:flex-col mb-8">
                   {index === 0 ? (
-                    <div className="flex max-w-[60px] mr-3 -ml-7 -mt-2 xs:mt-0 xs:mb-2 xs:mx-auto bg-white self-center">
+                    <div className="flex w-[60px] mr-3 -ml-7 -mt-2 xs:mt-0 xs:mb-2 xs:mx-auto bg-white self-center">
                       <div className="bg-slate-100/25 px-1 py-2 flex text-xl ">
                         {year}
                       </div>

@@ -123,7 +123,7 @@ const Calender = () => {
             </div>
           )}
 
-          <div className="flex self-center mt-4">
+          <div className="flex self-center mt-8">
             <PrimaryButton
               id="button"
               type="submit"

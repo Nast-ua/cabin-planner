@@ -2,44 +2,38 @@
 import checkIfDatesOverlap from "@/utils/checkIfDatesOverlap";
 import useSelectDates from "@/utils/useSelectDates";
 import dayjs from "dayjs";
+import updateLocale from "dayjs/plugin/updateLocale";
 import { DetailedHTMLProps, useCallback } from "react";
+
+import "dayjs/locale/de";
+
+dayjs.locale("de");
+dayjs.extend(updateLocale);
+dayjs.updateLocale("de", {
+  weekStart: 1,
+});
 
 export type ControlledDateInputProps = {
   type: "start" | "end";
+  initialDate: string;
   validationError?: "start" | "end" | null;
-  onChangeDate?: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    type: "start" | "end",
-    fallbackDate: string
-  ) => void;
+  onChangeDate?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 } & Omit<
   DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   >,
-  "type | required | value | onChange | className"
+  "type" | "required" | "value" | "onChange" | "className"
 >;
 
 const ControlledDateInput = ({
   type,
+  initialDate,
   validationError,
   onChangeDate,
   ...rest
 }: ControlledDateInputProps) => {
   const { selectedDates, setSelectedDates, setIsError } = useSelectDates();
-
-  const endOfWeek = dayjs().endOf("week");
-
-  const defaultDate =
-    type === "start"
-      ? (
-          (selectedDates?.startDate && dayjs(selectedDates?.startDate)) ||
-          endOfWeek.subtract(2, "days")
-        ).format("YYYY-MM-DD")
-      : (
-          (selectedDates?.endDate && dayjs(selectedDates?.endDate)) ||
-          endOfWeek
-        ).format("YYYY-MM-DD");
 
   const synchronizeSelectedDates = useCallback(
     (date: string) =>
@@ -71,7 +65,7 @@ const ControlledDateInput = ({
     setIsError(null);
     synchronizeSelectedDates(e.target.value);
 
-    onChangeDate && onChangeDate(e, type, defaultDate);
+    onChangeDate && onChangeDate(e);
 
     const selectedDatesOverlap =
       !!reservations?.length &&
@@ -83,7 +77,7 @@ const ControlledDateInput = ({
             start2:
               type === "start"
                 ? e.target.value
-                : selectedDates?.startDate || defaultDate,
+                : selectedDates?.startDate || initialDate,
             end2: type === "end" ? e.target.value : undefined,
           })
         )
@@ -113,10 +107,10 @@ const ControlledDateInput = ({
           type === "start"
             ? (selectedDates?.startDate &&
                 dayjs(selectedDates.startDate).format("YYYY-MM-DD")) ||
-              defaultDate
+              initialDate
             : (selectedDates?.endDate &&
                 dayjs(selectedDates.endDate).format("YYYY-MM-DD")) ||
-              defaultDate
+              initialDate
         }
         onChange={handleChangeDate}
         className={`border-2 ${

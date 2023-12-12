@@ -20,6 +20,7 @@ const BookPage = () => {
           name="name"
           id="name"
           type="text"
+          autoComplete="name"
           required
           placeholder="Your Name"
           className="border-2 border-black/5 rounded-lg px-4 py-2 mt-1 mb-6"
@@ -60,11 +61,7 @@ const BookPage = () => {
             />
           </Link>
 
-          <SubmitButton
-            value="book"
-            label="Book"
-            formAction={createReservation}
-          />
+          <SubmitButton value="book" formAction={createReservation} />
         </div>
       </form>
     </div>
