@@ -2,6 +2,7 @@ import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 export type PrimaryButtonProps = {
   label: string;
+  size?: "small" | "medium";
   isLoading?: boolean;
 } & DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -10,6 +11,7 @@ export type PrimaryButtonProps = {
 
 export const PrimaryButton = ({
   label,
+  size = "medium",
   disabled,
   isLoading,
   ...rest
@@ -20,13 +22,15 @@ export const PrimaryButton = ({
         disabled
           ? "bg-slate-500/60 cursor-default"
           : "bg-gradient-to-r from-cyan-500 to-blue-500 cursor-pointer"
-      } text-white text-center px-12 py-2 rounded-full  hover:opacity-60 xxs:mt-2 xxs:flex xxs:justify-center xxs:min-w-full`}
+      } text-white text-center ${
+        BUTTON_SIZE[size]
+      } rounded-full hover:opacity-60 xxs:mt-2 xxs:flex xxs:justify-center xxs:min-w-full`}
       disabled={disabled}
       {...rest}
     >
       {isLoading && (
         <svg
-          className="animate-spin h-5 w-5 left-4 top-[24%] absolute"
+          className={`animate-spin ${LOADING_INDICATOR[size]} absolute`}
           viewBox="0 0 24 24"
         >
           <path
@@ -44,6 +48,16 @@ export const PrimaryButton = ({
       {label}
     </button>
   );
+};
+
+const BUTTON_SIZE = {
+  small: "px-8 py-2 text-xs",
+  medium: "px-12 py-2 text-md",
+};
+
+const LOADING_INDICATOR = {
+  small: "h-4 w-4 left-[10px]top-[24%] ",
+  medium: "h-5 w-5 left-4 top-[24%] ",
 };
 
 export default PrimaryButton;

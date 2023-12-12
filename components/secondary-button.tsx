@@ -3,6 +3,7 @@ import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 export type SecondaryButtonProps = {
   label: string;
+  size?: "small" | "medium";
   gradient?: [string, string];
   labelColor?: string;
   style?: string;
@@ -13,6 +14,7 @@ export type SecondaryButtonProps = {
 
 export const SecondaryButton = ({
   label,
+  size = "medium",
   gradient,
   labelColor,
   style,
@@ -30,12 +32,17 @@ export const SecondaryButton = ({
       <div
         className={`flex-1 bg-white text-center ${
           labelColor ?? "text-cyan-600"
-        } px-[46px] py-[6px] rounded-full`}
+        } ${BUTTON_SIZE[size]} rounded-full`}
       >
         {label}
       </div>
     </button>
   );
+};
+
+const BUTTON_SIZE = {
+  small: "px-[30px] py-[6px] text-xs",
+  medium: "px-[46px] py-[6px] text-md",
 };
 
 export default SecondaryButton;

@@ -83,6 +83,7 @@ const EventCard = ({
 
       <div className="flex xxs:flex-col-reverse items-center xxs:self-center mt-4 xxs:mt-3">
         <SecondaryButton
+          size="small"
           label="Delete"
           gradient={["from-red-400", "to-red-400"]}
           labelColor="text-red-400"
@@ -90,7 +91,7 @@ const EventCard = ({
           onClick={async () => deleteReservation(id)}
         />
 
-        <PrimaryButton label="Edit" />
+        <PrimaryButton size="small" label="Edit" />
       </div>
     </div>
   );
