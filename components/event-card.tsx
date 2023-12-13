@@ -56,7 +56,7 @@ const EventCard = ({
   }`;
 
   return (
-    <div className="flex-1  flex-col border-2 border-black/5 rounded-lg px-4 py-2 max-w-[480px]">
+    <div className="flex-1  flex-col border-2 border-black/5 rounded-lg px-4 pt-2 pb-3 max-w-[480px]">
       <div className="flex flex-row xxs:flex-col">
         <div className="flex max-w-[35%] xs:max-w-[50%] xxs:max-w-full py-2 xxs:pb-4 pr-4 xxs:pr-0 border-r xxs:border-r-0 xxs:border-b border-black/5">
           <div className="flex-1 items-center bg-sky-700/30 rounded-md p-2 ">
@@ -87,7 +87,7 @@ const EventCard = ({
           label="Delete"
           gradient={["from-red-400", "to-red-400"]}
           labelColor="text-red-400"
-          style="xxs:mt-1 "
+          style="xxs:mt-1 mr-4"
           onClick={async () => deleteReservation(id)}
         />
 

@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import useQueryReservations from "@/utils/useQueryReservations";
+import useQueryReservations from "@/hooks/useQueryReservations";
 import Week from "./week";
 
 const Month = ({ month, year }: { month: number; year: number }) => {

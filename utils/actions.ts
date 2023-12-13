@@ -11,10 +11,11 @@ export const update = (paths: string[] = []) =>
   paths.forEach((p) => revalidatePath(p));
 
 export async function createReservation(formData: FormData) {
-  const user = await getUserByClerkID();
   const rawFormData = Object.fromEntries(formData.entries());
 
   try {
+    const user = await getUserByClerkID();
+
     // TODO: Add server side data validation
     if (
       !rawFormData.endDate ||
@@ -55,10 +56,11 @@ export async function createReservation(formData: FormData) {
 }
 
 export async function updateReservation(id: string, formData: FormData) {
-  const user = await getUserByClerkID();
   const rawFormData = Object.fromEntries(formData.entries());
 
   try {
+    const user = await getUserByClerkID();
+
     if (!rawFormData.participants) console.log("Error Handling!");
 
     await prisma.event.update({
@@ -77,15 +79,19 @@ export async function updateReservation(id: string, formData: FormData) {
 }
 
 export async function deleteReservation(id: string) {
-  console.log(id);
-  const user = await getUserByClerkID();
+  try {
+    const user = await getUserByClerkID();
 
-  await prisma.event.delete({
-    where: {
-      id,
-      users: { some: { id: user.id } },
-    },
-  });
+    await prisma.event.delete({
+      where: {
+        id,
+        users: { some: { id: user.id } },
+      },
+    });
+  } catch (error) {
+    // TODO: Add error handling
+    console.log(e);
+  }
 
   update(["/my-events"]);
 }

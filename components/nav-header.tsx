@@ -1,5 +1,5 @@
 "use client";
-import useClickOutside from "@/utils/useClickOutside";
+import useClickOutside from "@/hooks/useClickOutside";
 import { UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";

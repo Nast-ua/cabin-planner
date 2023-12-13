@@ -2,7 +2,7 @@
 import Header from "@/components/calender/header";
 import Month from "@/components/calender/month";
 import Year from "@/components/calender/year";
-import useSelectDates from "@/utils/useSelectDates";
+import useSelectDates from "@/hooks/useSelectDates";
 import dayjs from "dayjs";
 import {
   default as isBetween,
@@ -16,7 +16,7 @@ import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import weekday from "dayjs/plugin/weekday";
 
-import useActiveReservation from "@/utils/useActiveReservation";
+import useActiveReservation from "@/hooks/useActiveReservation";
 import "dayjs/locale/de";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

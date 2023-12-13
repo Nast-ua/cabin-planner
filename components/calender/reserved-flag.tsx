@@ -1,5 +1,5 @@
-import useActiveReservation from "@/utils/useActiveReservation";
-import useClickOutside from "@/utils/useClickOutside";
+import useActiveReservation from "@/hooks/useActiveReservation";
+import useClickOutside from "@/hooks/useClickOutside";
 import dayjs from "dayjs";
 import { useCallback } from "react";
 

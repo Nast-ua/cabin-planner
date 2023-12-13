@@ -1,7 +1,7 @@
 import NavHeader from "@/components/nav-header";
 import SideBar from "@/components/side-bar";
-import { ActiveReservationProvider } from "@/utils/useActiveReservation";
-import { SelectedDateProvider } from "@/utils/useSelectDates";
+import { ActiveReservationProvider } from "@/hooks/useActiveReservation";
+import { SelectedDateProvider } from "@/hooks/useSelectDates";
 import { ReactNode } from "react";
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {

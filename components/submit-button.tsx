@@ -1,6 +1,6 @@
 "use client";
 
-import useSelectDates from "@/utils/useSelectDates";
+import useSelectDates from "@/hooks/useSelectDates";
 import { useFormStatus } from "react-dom";
 import PrimaryButton, { PrimaryButtonProps } from "./primary-button";
 

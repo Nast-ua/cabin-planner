@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { getReservationsForMonth } from "./api";
-import { Reservation } from "./types";
+import { Reservation } from "../utils/types";
+import useAuthFetch from "./useAuthFetch";
 
 export default function useQueryReservations({
   month,
@@ -13,9 +13,11 @@ export default function useQueryReservations({
 }) {
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
+  const url = `/api/reservations?month=${month}&year=${year}&from=${from}`;
+
   const fetchReservations = useCallback(
-    () => getReservationsForMonth({ month, year, from }),
-    [month, year]
+    useAuthFetch<{ data: Reservation[] }>(url),
+    [url]
   );
 
   useEffect(() => {

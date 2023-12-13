@@ -41,7 +41,7 @@ export const SecondaryButton = ({
 };
 
 const BUTTON_SIZE = {
-  small: "px-[30px] py-[6px] text-xs",
+  small: "px-[38px] py-[6px] text-xs",
   medium: "px-[46px] py-[6px] text-md",
 };
 

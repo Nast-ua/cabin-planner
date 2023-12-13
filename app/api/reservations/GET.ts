@@ -1,15 +1,17 @@
 import { prisma } from "@/utils/db";
-import { auth } from "@clerk/nextjs";
 import dayjs from "dayjs";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const { userId } = auth();
+  const authHeader = request.headers.get("Authorization")?.split(" ");
 
-  if (!userId) {
-    return new Response("Unauthorized", { status: 401 });
-  }
+  if (!authHeader?.length) throw new Error("Request not authorized");
 
+  const token = authHeader[authHeader.length - 1];
+
+  const auth = await auth();
+  // const user = await getUserByClerkID();
+  // if (!user) throw new Error("user-not-found");
   const searchParams = request.nextUrl.searchParams;
 
   const month = searchParams.get("month");
@@ -37,12 +39,16 @@ export async function GET(request: NextRequest) {
     where = { ...where, startDate: { gte: new Date(from) } };
   }
 
-  const reservations = await prisma.event.findMany({
-    where,
-    orderBy: {
-      startDate: "asc",
-    },
-  });
+  try {
+    const reservations = await prisma.event.findMany({
+      where,
+      orderBy: {
+        startDate: "asc",
+      },
+    });
 
-  return Response.json({ data: reservations });
+    return Response.json({ data: reservations });
+  } catch (e) {
+    console.log(e);
+  }
 }

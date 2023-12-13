@@ -1,6 +1,6 @@
 "use client";
-import useQueryReservations from "@/utils/useQueryReservations";
-import useSelectDates from "@/utils/useSelectDates";
+import useQueryReservations from "@/hooks/useQueryReservations";
+import useSelectDates from "@/hooks/useSelectDates";
 import dayjs from "dayjs";
 import { useState } from "react";
 import ControlledDateInput from "./controlled-date-input";

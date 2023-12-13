@@ -1,9 +1,9 @@
-import useSelectDates from "@/utils/useSelectDates";
+import useSelectDates from "@/hooks/useSelectDates";
 import dayjs from "dayjs";
 
+import useActiveReservation from "@/hooks/useActiveReservation";
 import checkIfDatesOverlap from "@/utils/checkIfDatesOverlap";
 import { Reservation } from "@/utils/types";
-import useActiveReservation from "@/utils/useActiveReservation";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import Day, { DayType } from "./day";
 import ReservedFlag from "./reserved-flag";

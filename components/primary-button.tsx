@@ -51,7 +51,7 @@ export const PrimaryButton = ({
 };
 
 const BUTTON_SIZE = {
-  small: "px-8 py-2 text-xs",
+  small: "px-10 py-2 text-xs",
   medium: "px-12 py-2 text-md",
 };
 
