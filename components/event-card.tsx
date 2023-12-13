@@ -57,6 +57,7 @@ const EventCard = ({
     months[end.get("month")]
   }`;
 
+  // TODO: Add family tree information
   return (
     <div
       className={`flex-1  flex-col border-2 border-black/5 rounded-lg px-4 pt-2 pb-3 ${style}`}
