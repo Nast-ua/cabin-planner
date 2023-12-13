@@ -12,7 +12,7 @@ const Header = ({
   onPressPrevious: () => void;
 }) => {
   return (
-    <div className="flex flex-wrap xxs:flex-col justify-between items-center mx-1 mb-4">
+    <div className="flex flex-wrap xxs:flex-col justify-between items-center mx-1 mb-6">
       <div className="flex items-center ml-2 xxs:ml-0 xxs:mb-2">
         <div
           className="flex p-2 cursor-pointer"

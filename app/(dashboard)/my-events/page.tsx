@@ -52,6 +52,7 @@ const MyEventsPage = async () => {
                     endDate={endDate.toString()}
                     participants={participants}
                     approved={approved}
+                    style="max-w-[480px]"
                   />
                 </div>
               )

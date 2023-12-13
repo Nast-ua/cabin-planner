@@ -99,8 +99,8 @@ const Week = ({
       }));
   };
 
-  const handleClickReservation = (startDate: string) => {
-    setActiveReservation(startDate);
+  const handleClickReservation = (id: string) => {
+    setActiveReservation(id);
     setSelectedDates(null);
     setIsError(null);
   };
@@ -140,7 +140,7 @@ const Week = ({
             duration={duration}
             name={name}
             isActive={activeReservation === startDate}
-            onClick={() => handleClickReservation(startDate)}
+            onClick={() => handleClickReservation(id)}
           />
         ))}
     </div>

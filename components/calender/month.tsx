@@ -1,10 +1,14 @@
 import dayjs from "dayjs";
 
 import useQueryReservations from "@/hooks/useQueryReservations";
+import { selectApprovedReservations } from "@/utils/selectors";
 import Week from "./week";
 
 const Month = ({ month, year }: { month: number; year: number }) => {
-  const reservations = useQueryReservations({ month, year });
+  const reservations = useQueryReservations(
+    { month, year },
+    selectApprovedReservations
+  );
 
   const startOfMonth = dayjs().month(month).year(year).startOf("month");
   const endOfMonth = startOfMonth.endOf("month");

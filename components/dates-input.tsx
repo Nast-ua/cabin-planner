@@ -1,6 +1,7 @@
 "use client";
 import useQueryReservations from "@/hooks/useQueryReservations";
 import useSelectDates from "@/hooks/useSelectDates";
+import { selectApprovedReservations } from "@/utils/selectors";
 import dayjs from "dayjs";
 import { useState } from "react";
 import ControlledDateInput from "./controlled-date-input";
@@ -8,9 +9,12 @@ import ErrorMessage from "./error-message";
 
 function DatesInput() {
   const today = dayjs();
-  const reservations = useQueryReservations({
-    from: today.format("YYYY-MM-DD"),
-  });
+  const reservations = useQueryReservations(
+    {
+      from: today.format("YYYY-MM-DD"),
+    },
+    selectApprovedReservations
+  );
 
   const [validationError, setValidationError] = useState<
     "start" | "end" | null

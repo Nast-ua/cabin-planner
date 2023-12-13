@@ -1,17 +1,17 @@
 import { prisma } from "@/utils/db";
+import { auth } from "@clerk/nextjs";
 import dayjs from "dayjs";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get("Authorization")?.split(" ");
+  // const authHeader = request.headers.get("Authorization")?.split(" ");
+  // if (!authHeader?.length) throw new Error("Request not authorized");
+  // const token = authHeader[authHeader.length - 1];
 
-  if (!authHeader?.length) throw new Error("Request not authorized");
+  const { userId } = await auth();
 
-  const token = authHeader[authHeader.length - 1];
+  if (!userId) throw new Error("No auth user");
 
-  const auth = await auth();
-  // const user = await getUserByClerkID();
-  // if (!user) throw new Error("user-not-found");
   const searchParams = request.nextUrl.searchParams;
 
   const month = searchParams.get("month");

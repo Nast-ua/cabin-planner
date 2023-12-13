@@ -17,11 +17,16 @@ import weekOfYear from "dayjs/plugin/weekOfYear";
 import weekday from "dayjs/plugin/weekday";
 
 import useActiveReservation from "@/hooks/useActiveReservation";
+import useQueryReservations from "@/hooks/useQueryReservations";
+import { selectReservation } from "@/utils/selectors";
 import "dayjs/locale/de";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import EventCard from "../event-card";
+import InfoText from "../info-text";
 import PrimaryButton from "../primary-button";
 
+// TODO: Extract this to util/helpers
 dayjs.locale("de");
 dayjs.extend(localeData);
 dayjs.extend(updateLocale);
@@ -89,6 +94,24 @@ const Calender = () => {
   const selectedMonth = dayjs(selectedDate || undefined).get("month");
   const selectedYear = dayjs(selectedDate || undefined).get("year");
 
+  const reservations = useQueryReservations<
+    ReturnType<typeof selectReservation> | undefined
+  >(
+    {
+      month: selectedMonth,
+      year: selectedYear,
+    },
+    (data) =>
+      activeReservation ? selectReservation(data, activeReservation) : undefined
+  ) as
+    | {
+        title: string;
+        startDate: string;
+        endDate: string;
+        participants: number;
+      }
+    | undefined;
+
   return (
     <div className="flex flex-col max-w-[860px]">
       <Header
@@ -109,18 +132,17 @@ const Calender = () => {
         <div className="flex flex-col">
           <Month month={selectedMonth} year={selectedYear} />
 
-          {/* TODO: */}
-          {activeReservation && (
+          {activeReservation && reservations && (
             <div className="mt-4">
-              Info about event...., 5 people, from... to... {activeReservation}
+              <EventCard {...reservations} />
             </div>
           )}
 
           {isError === "dates-reserved" && (
-            <div className="mt-4">
-              The dates you have selected overlap with an existing event
-              {activeReservation}. Do you want to request to join it instead?
-            </div>
+            <InfoText
+              label="The dates you have selected overlap with an existing event. Do you want
+            to request to join it instead?"
+            />
           )}
 
           <div className="flex self-center mt-8">
