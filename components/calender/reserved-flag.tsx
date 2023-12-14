@@ -22,7 +22,7 @@ const ReservedFlag = ({
   const [, setActiveReservation] = useActiveReservation();
 
   const handleClickOutside = useCallback(
-    (id?: string) => !id?.startsWith("reserved") && setActiveReservation(null),
+    (id?: string) => !id?.startsWith("flag") && setActiveReservation(null),
     [setActiveReservation]
   );
 
@@ -64,7 +64,7 @@ const ReservedFlag = ({
 
     return (
       <div
-        id={`reserved${start}`}
+        id={`flag-div-${start}`}
         ref={ref}
         onClick={(e) => {
           e.preventDefault();
@@ -86,7 +86,9 @@ const ReservedFlag = ({
         } rounded-lg focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-900/90
         sm:shadow-lg sm:rounded-md pl-4 sm:bottom-[7%] cursor-pointer hover:opacity-70`}
       >
-        <p className="hidden truncate sm:block mt-[6px]">{name}</p>
+        <p id={`flag-p-${start}`} className="hidden truncate sm:block mt-[6px]">
+          {name}
+        </p>
       </div>
     );
   }

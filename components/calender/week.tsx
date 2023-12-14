@@ -139,7 +139,7 @@ const Week = ({
             start={startDate}
             duration={duration}
             name={name}
-            isActive={activeReservation === startDate}
+            isActive={activeReservation === id}
             onClick={() => handleClickReservation(id)}
           />
         ))}
