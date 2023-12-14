@@ -21,7 +21,7 @@ import useQueryReservations from "@/hooks/useQueryReservations";
 import { selectReservation } from "@/utils/selectors";
 import "dayjs/locale/de";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import EventCard from "../event-card";
 import InfoText from "../info-text";
 import PrimaryButton from "../primary-button";
@@ -59,7 +59,7 @@ dayjs.extend(isSameOrBefore);
 const Calender = () => {
   const router = useRouter();
 
-  const { selectedDates, isError } = useSelectDates();
+  const { selectedDates, isError, setSelectedDates } = useSelectDates();
   const [activeReservation] = useActiveReservation();
 
   const [selectedView, setSelectedView] = useState<"month" | "year">("month");
@@ -112,6 +112,19 @@ const Calender = () => {
       }
     | undefined;
 
+  const handleClickCTA: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    activeReservation &&
+      reservations &&
+      setSelectedDates({
+        startDate: dayjs(reservations.startDate).format("YYYY-MM-DD"),
+        endDate: dayjs(reservations.endDate).format("YYYY-MM-DD"),
+      });
+
+    router.push("/book");
+  };
+
   return (
     <div className="flex flex-col max-w-[860px]">
       <Header
@@ -150,12 +163,7 @@ const Calender = () => {
               id="button"
               type="submit"
               disabled={!selectedDates?.startDate && !activeReservation}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                // TODO: Set Selected dates to reservation dates
-                router.push("/book");
-              }}
+              onClick={handleClickCTA}
               label={
                 activeReservation || isError === "dates-reserved"
                   ? "Request To Join"

@@ -1,4 +1,4 @@
-import { createURL } from "@/utils/hepler";
+import { createURL } from "@/utils/heplers";
 import { useAuth } from "@clerk/nextjs";
 
 export default function useAuthFetch<T>(url: string): () => Promise<T> {

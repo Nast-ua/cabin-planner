@@ -55,51 +55,22 @@ export async function createReservation(formData: FormData) {
   redirect("/my-events");
 }
 
-export async function updateReservation(id: string, formData: FormData) {
-  const rawFormData = Object.fromEntries(formData.entries());
-
-  try {
-    const user = await getUserByClerkID();
-
-    if (!rawFormData.participants) console.log("Error Handling!");
-
-    await prisma.event.update({
-      where: { id },
-      data: {
-        users: { connect: { id: user.id } },
-      },
-    });
-  } catch (e) {
-    // TODO: Add error handling
-    console.log(e);
-  }
-
-  update(["/my-events"]);
-  redirect("/my-events");
-}
-
 export async function deleteReservation(id: string) {
   try {
     const user = await getUserByClerkID();
 
     await prisma.event.delete({
       where: {
-        id,
-        users: { some: { id: user.id } },
+        userId_id: {
+          id,
+          userId: user.id,
+        },
       },
     });
   } catch (error) {
     // TODO: Add error handling
-    console.log(e);
+    console.log(error);
   }
 
   update(["/my-events"]);
-}
-
-export async function createAndUpdateReservation(
-  id: string,
-  formData: FormData
-) {
-  update(["/my-events"]);
-  redirect("/my-events");
 }

@@ -34,7 +34,8 @@ model Event {
   familyTree   String
   approved     Boolean  @default(false)
 
-  users User[]
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  @@unique([id, startDate]) // TODO: Add unique indices for relation fields
+  @@unique([userId, id])
 }
