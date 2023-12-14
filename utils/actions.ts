@@ -3,6 +3,7 @@
 import dayjs from "dayjs";
 import { getUserByClerkID } from "./auth";
 
+import { User } from "@clerk/nextjs/dist/types/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "./db";
@@ -10,12 +11,26 @@ import { prisma } from "./db";
 export const update = (paths: string[] = []) =>
   paths.forEach((p) => revalidatePath(p));
 
+export const createNewUser = async (authUser: User) => {
+  try {
+    await prisma.user.create({
+      data: {
+        clerkId: authUser.id,
+        email: authUser.emailAddresses[0].emailAddress,
+        name: authUser.firstName,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export async function createReservation(formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries());
 
-  try {
-    const user = await getUserByClerkID();
+  const user = await getUserByClerkID();
 
+  try {
     // TODO: Add server side data validation
     if (
       !rawFormData.endDate ||
@@ -41,7 +56,7 @@ export async function createReservation(formData: FormData) {
     };
 
     await prisma.user.update({
-      where: { id: user.id },
+      where: { id: user!.id },
       data: {
         events: { create: [reservation] },
       },
@@ -56,14 +71,14 @@ export async function createReservation(formData: FormData) {
 }
 
 export async function deleteReservation(id: string) {
-  try {
-    const user = await getUserByClerkID();
+  const user = await getUserByClerkID();
 
+  try {
     await prisma.event.delete({
       where: {
         userId_id: {
           id,
-          userId: user.id,
+          userId: user!.id,
         },
       },
     });

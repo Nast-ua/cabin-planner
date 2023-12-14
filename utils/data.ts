@@ -8,7 +8,7 @@ export const getMyEvents = async () => {
     return await prisma.event.findMany({
       where: {
         startDate: { gte: new Date() },
-        userId: user.id,
+        userId: user!.id,
       },
       orderBy: {
         startDate: "asc",
@@ -28,7 +28,7 @@ export const getEventById = async (id: string) => {
       where: {
         userId_id: {
           id,
-          userId: user.id,
+          userId: user!.id,
         },
       },
     });
